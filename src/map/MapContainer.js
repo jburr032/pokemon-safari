@@ -1,20 +1,14 @@
 import React from "react";
+import Container from "@material-ui/core/Container";
 import MapEditor from "./MapEditor";
 import MapInput from "./MapInput";
 
 export const MapContainer = () => {
-  const mapContainerStyle = {
-    margin: "10px auto",
-    position: "relative",
-    backgroundColor: "black",
-    width: "300px",
-    height: "500px"
-  };
 
   return (
-    <div style={mapContainerStyle}>
+    <Container style={{ textAlign: "center" }}>
       <MapEditor />
       <MapInput />
-    </div>
+    </Container>
   );
 };

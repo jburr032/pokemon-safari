@@ -65,7 +65,7 @@ const useStyles = makeStyles({
     overflow: "hidden",
     background: "#d7dfe2",
     zIndex: 0,
-    backgroundImage: "url(sprites/safari_zone.png)",
+    backgroundImage: "url(sprites/pallet_town.png)",
     backgroundRepeat: "no-repeat",
     marginLeft: "-40px"
   }
@@ -138,6 +138,7 @@ export default function App() {
     <>
       <Grid container className={classes.gridContainerStyle}>
         <Grid item md={5}>
+          {/* left-side with map selection */}
           <Container style={{ textAlign: "center" }}>
             <Typography className={classes.mapNameStyle}>
               <a href="https://fontmeme.com/pokemon-font/">
@@ -229,6 +230,8 @@ export default function App() {
           <div className={classes.verticalLine}></div>
         </Grid>
         <Grid item md={6}>
+
+          {/* map and editor */}
           <Container style={{ textAlign: "center" }}>
             <Typography className={classes.mapNameStyle}>
               <a href="https://fontmeme.com/pokemon-font/">
@@ -240,6 +243,8 @@ export default function App() {
                 />
               </a>
             </Typography>
+
+            {/* editing buttons */}
             <Container className={classes.buttonContainerStyle}>
               <Button color="primary">Walkable</Button>
               <Button color="secondary">Blockable</Button>
@@ -263,7 +268,6 @@ export default function App() {
               </ResizeProvider>
             </Container>
           </Container>
-
         </Grid>
       </Grid>
     </>
