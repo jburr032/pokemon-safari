@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
+// { useContext, useEffect, useState } from "react";
 // import { MapContext } from "../state/mapContext";
 import { Button, Container } from "@material-ui/core";
 import { ResizeProvider, ResizeConsumer } from "react-resize-context";

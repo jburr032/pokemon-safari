@@ -5,7 +5,12 @@ import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  mapNameStyle: {}
+  mapNameStyle: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: "#b7c7bb",
+    paddingTop: "15px"
+  }
 });
 
 export default function MapEditorContainer(){
