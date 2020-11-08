@@ -1,14 +1,12 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
 import MapEditor from "./MapEditor";
-import MapInput from "./MapInput";
 
-export const MapContainer = () => {
+export default function MapEditorContainer(){
 
   return (
     <Container style={{ textAlign: "center" }}>
       <MapEditor />
-      <MapInput />
     </Container>
   );
 };

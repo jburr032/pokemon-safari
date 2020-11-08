@@ -1,22 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { MapContext } from "../state/mapContext";
-import {
-  Button,
-  Container
-} from "@material-ui/core";
+// import { MapContext } from "../state/mapContext";
+import { Button, Container } from "@material-ui/core";
 import { ResizeProvider, ResizeConsumer } from "react-resize-context";
 import { makeStyles } from "@material-ui/core/styles";
 
-const resizeTest = () => (
-  <ResizeConsumer
-    onSizeChanged={handleSizeChanged}
-    className={classes.resizeContentStyles}
-  >
-    {`${size.width}x${size.height}`}
-  </ResizeConsumer>
-);
-
-const generateGrid = () => {
+const generateGrid = (size) => {
   let grid = [];
 
   console.log(size.height, size.width);
@@ -63,13 +51,6 @@ const generateGrid = () => {
 };
 
 const useStyles = makeStyles({
-  editMapContainerStyle: {
-    // width: 400,
-    // height: 400,
-    // backgroundColor: "red",
-    // opacity: "10%",
-    // paddingRight: "325px"
-  },
   buttonContainerStyle: {
     alignContent: "center",
     height: "20px",
@@ -92,8 +73,22 @@ const useStyles = makeStyles({
 
 export default function MapEditor() {
   const classes = useStyles();
-  const { mapState, dispatch } = useContext(MapContext);
+  const [size, setSize] = React.useState({width: 509, height: 417});
+  // const { mapState, dispatch } = useContext(MapContext);
   
+  const handleSizeChanged = (newSize) => {
+    setSize(newSize);
+  };
+
+  const resizeTest = () => (
+    <ResizeConsumer
+      onSizeChanged={handleSizeChanged}
+      className={classes.resizeContentStyles}
+    >
+      {`${size.width}x${size.height}`}
+    </ResizeConsumer>
+  );
+
   return (
     <>
       {/* editing buttons */}
@@ -113,7 +108,7 @@ export default function MapEditor() {
                       marginLeft: "-10px"
                     }}
                   >
-                    {generateGrid()}
+                    {generateGrid(size)}
                   </div>
                 </div>
                 <div>{resizeTest()}</div>
