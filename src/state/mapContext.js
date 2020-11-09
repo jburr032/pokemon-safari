@@ -14,7 +14,7 @@ const initialMapState = {
 };
 
 const mapReducer = (state, action) => {
-  const { SAVE_MAP, CREATE_MAP, UPDATE_MAP } = mapTypes;
+  const { SAVE_MAP, CREATE_MAP, UPDATE_MAP, CHANGE_COLOUR } = mapTypes;
 
   switch (action.type) {
     case SAVE_MAP:
@@ -23,6 +23,7 @@ const mapReducer = (state, action) => {
     case CREATE_MAP:
       return {...state, currMap: createMapHelper(action.payload)};
     case CHANGE_COLOUR:
+      console.log(action.payload);
       return {...state, currColour: action.payload}
     case UPDATE_MAP:
       // accesses array based on coordinates and updates with value
