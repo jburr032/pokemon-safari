@@ -1,9 +1,9 @@
-import React from "react";
-// { useContext, useEffect, useState } from "react";
-// import { MapContext } from "../state/mapContext";
+import React, { useContext } from "react";
+import { MapContext, mapTypes } from "../state/mapContext";
 import { Button, Container } from "@material-ui/core";
 import { ResizeProvider, ResizeConsumer } from "react-resize-context";
 import { makeStyles } from "@material-ui/core/styles";
+
 
 const generateGrid = (size) => {
   let grid = [];
@@ -74,6 +74,7 @@ const useStyles = makeStyles({
 
 export default function MapEditor() {
   const classes = useStyles();
+  const [mapState, dispatch] = useContext(MapContext);
   const [size, setSize] = React.useState({width: 509, height: 417});
   // const { mapState, dispatch } = useContext(MapContext);
   
@@ -94,9 +95,9 @@ export default function MapEditor() {
     <>
       {/* editing buttons */}
       <Container className={classes.buttonContainerStyle}>
-        <Button color="primary">Walkable</Button>
-        <Button color="secondary">Blockable</Button>
-        <Button>Interactable</Button>
+        <Button color="primary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "blue"})}>Walkable</Button>
+        <Button color="secondary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "red"})}>Blockable</Button>
+        <Button onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "purple"})}>Interactable</Button>
       </Container>
       <Container className={classes.editMapContainerStyle}>
           <ResizeProvider>

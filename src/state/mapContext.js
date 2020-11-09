@@ -4,11 +4,13 @@ import {createMapHelper} from "./utils"
 export const mapTypes = {
   SAVE_MAP: "SAVE_MAP",
   CREATE_MAP: "CREATE_MAP",
-  UPDATE_MAP: "UPDATE_MAP"
+  UPDATE_MAP: "UPDATE_MAP",
+  CHANGE_COLOUR: "CHANGE_COLOUR"
 };
 
 const initialMapState = {
-  currMap: { mapArray: [[0]], mapName: "", mapFilepath: "" }
+  currMap: { mapArray: [[0]], mapName: "", mapFilepath: "" },
+  currColour: "blue"
 };
 
 const mapReducer = (state, action) => {
@@ -20,6 +22,8 @@ const mapReducer = (state, action) => {
       return null;
     case CREATE_MAP:
       return {...state, currMap: createMapHelper(action.payload)};
+    case CHANGE_COLOUR:
+      return {...state, currColour: action.payload}
     case UPDATE_MAP:
       // accesses array based on coordinates and updates with value
       return null;
