@@ -1,42 +1,121 @@
-import React, { useContext, useEffect, useState } from "react";
-import { MapContext } from "../state/mapContext";
+import React, { useContext } from "react";
+import { MapContext, mapTypes } from "../state/mapContext";
+import { Button, Container } from "@material-ui/core";
+import { ResizeProvider, ResizeConsumer } from "react-resize-context";
+import { makeStyles } from "@material-ui/core/styles";
+
+
+const generateGrid = (size) => {
+  let grid = [];
+
+  console.log(size.height, size.width);
+
+  for (let i = 0; i < size.height * 1.9; i++) {
+    let row = [];
+    for (let j = 0; j < size.width * 1.8; j++) {
+      row.push(
+        <div
+          style={{
+            width: "16px",
+            transform: "translateY(25%) translateX(15px)",
+            height: "16px",
+            display: "inline-flex",
+            zIndex: 2,
+            color: "black",
+            position: "relative"
+          }}
+        ></div>
+      );
+    }
+
+    grid.push(
+      <div
+        style={{
+          width: "16px",
+          transform: "translateY(25%) translateX(15px)",
+          height: "16px",
+          display: "inline-flex",
+          zIndex: 2,
+          color: "transparent",
+          position: "relative",
+          backgroundColor: "blue",
+          border: "1px solid white",
+          opacity: "25%"
+        }}
+      >
+        0
+      </div>
+    );
+  }
+
+  return grid;
+};
+
+const useStyles = makeStyles({
+  buttonContainerStyle: {
+    alignContent: "center",
+    height: "20px",
+    marginBottom: "30px"
+  },
+  resizableContainer: {
+    display: "inline-flex",
+    flexDirection: "column",
+    width: "509px",
+    height: "417px",
+    resize: "both",
+    overflow: "hidden",
+    background: "#d7dfe2",
+    zIndex: 0,
+    backgroundImage: "url(sprites/pallet_town.png)",
+    backgroundRepeat: "no-repeat",
+    marginLeft: "-40px"
+  }
+});
 
 export default function MapEditor() {
-  const { mapState, dispatch } = useContext(MapContext);
-  const [grid, setGrid] = useState([]);
-
-  useEffect(() => {
-    setGrid(mapState.currMap);
-  }, [mapState]);
-
-  const mapEditorStyles = {
-    width: "300px",
-    height: "300px",
-    position: "relative",
-    backgroundColor: "blue"
+  const classes = useStyles();
+  const [mapState, dispatch] = useContext(MapContext);
+  const [size, setSize] = React.useState({width: 509, height: 417});
+  // const { mapState, dispatch } = useContext(MapContext);
+  
+  const handleSizeChanged = (newSize) => {
+    setSize(newSize);
   };
 
-  console.log("grid", grid)
+  const resizeTest = () => (
+    <ResizeConsumer
+      onSizeChanged={handleSizeChanged}
+      className={classes.resizeContentStyles}
+    >
+      {`${size.width}x${size.height}`}
+    </ResizeConsumer>
+  );
 
   return (
-    <div style={mapEditorStyles}>
-      {grid !== undefined && grid.map((row, index) => (
-          <div key={index}>
-            {row.map((cell) => (
-              <div
-                style={{
-                  display: "inline-flex",
-                  position: "relative",
-                  width: "16px",
-                  height: "16px"
-                }}
-                key={index}
-              >
-                {cell}
-              </div>
-            ))}
-          </div>
-        ))}
-    </div>
+    <>
+      {/* editing buttons */}
+      <Container className={classes.buttonContainerStyle}>
+        <Button color="primary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "blue"})}>Walkable</Button>
+        <Button color="secondary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "red"})}>Blockable</Button>
+        <Button onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "purple"})}>Interactable</Button>
+      </Container>
+      <Container className={classes.editMapContainerStyle}>
+          <ResizeProvider>
+                <div className={classes.resizableContainer}>
+                  <div
+                    style={{
+                      width: size.width,
+                      height: size.height,
+                      zIndex: 5,
+                      marginLeft: "-10px"
+                    }}
+                  >
+                    {generateGrid(size)}
+                  </div>
+                </div>
+                <div>{resizeTest()}</div>
+          </ResizeProvider>
+      </Container>
+    </>
   );
 }
