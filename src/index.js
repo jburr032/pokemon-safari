@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { MapProvider } from "./state/mapContext";
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MapProvider>
+      <App />
+    </MapProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

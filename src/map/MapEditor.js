@@ -1,51 +1,20 @@
-import React, { useContext } from "react";
-import { MapContext, mapTypes } from "../state/mapContext";
+import React, { useEffect, useState } from "react";
 import { Button, Container } from "@material-ui/core";
 import { ResizeProvider, ResizeConsumer } from "react-resize-context";
 import { makeStyles } from "@material-ui/core/styles";
+import MapTile from "./MapTile";
 
-
-const generateGrid = (size) => {
+const generateGrid = (size, tileColour) => {
   let grid = [];
 
-  console.log(size.height, size.width);
-
-  for (let i = 0; i < size.height * 1.9; i++) {
+  for (let i = 0; i < size.height/16; i++) {
     let row = [];
-    for (let j = 0; j < size.width * 1.8; j++) {
+    for (let j = 0; j < size.width/16; j++) {
       row.push(
-        <div
-          style={{
-            width: "16px",
-            transform: "translateY(25%) translateX(15px)",
-            height: "16px",
-            display: "inline-flex",
-            zIndex: 2,
-            color: "black",
-            position: "relative"
-          }}
-        ></div>
+        <MapTile tileColour={tileColour}/>
       );
     }
-
-    grid.push(
-      <div
-        style={{
-          width: "16px",
-          transform: "translateY(25%) translateX(15px)",
-          height: "16px",
-          display: "inline-flex",
-          zIndex: 2,
-          color: "transparent",
-          position: "relative",
-          backgroundColor: "blue",
-          border: "1px solid white",
-          opacity: "25%"
-        }}
-      >
-        0
-      </div>
-    );
+    grid.push(row);
   }
 
   return grid;
@@ -74,9 +43,16 @@ const useStyles = makeStyles({
 
 export default function MapEditor() {
   const classes = useStyles();
-  const [mapState, dispatch] = useContext(MapContext);
+  const [tileColour, setColour] = useState("blue")
   const [size, setSize] = React.useState({width: 509, height: 417});
-  // const { mapState, dispatch } = useContext(MapContext);
+  const [grid, setGrid] = useState();
+
+  useEffect(() => {
+    const grid = generateGrid(size, tileColour);
+
+    setGrid(grid);
+
+  }, [tileColour, size])
   
   const handleSizeChanged = (newSize) => {
     setSize(newSize);
@@ -93,11 +69,10 @@ export default function MapEditor() {
 
   return (
     <>
-      {/* editing buttons */}
       <Container className={classes.buttonContainerStyle}>
-        <Button color="primary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "blue"})}>Walkable</Button>
-        <Button color="secondary" onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "red"})}>Blockable</Button>
-        <Button onClick={() => dispatch({ type: mapTypes.CHANGE_COLOUR, payload: "purple"})}>Interactable</Button>
+        <Button color="primary" onClick={() => setColour("blue")}>Walkable</Button>
+        <Button color="secondary" onClick={() => setColour("red")}>Blockable</Button>
+        <Button onClick={() => setColour("yellow")}>Interactable</Button>
       </Container>
       <Container className={classes.editMapContainerStyle}>
           <ResizeProvider>
@@ -110,7 +85,8 @@ export default function MapEditor() {
                       marginLeft: "-10px"
                     }}
                   >
-                    {generateGrid(size)}
+                    {/* {generateGrid(size, tileColour)} */}
+                    {grid}
                   </div>
                 </div>
                 <div>{resizeTest()}</div>
