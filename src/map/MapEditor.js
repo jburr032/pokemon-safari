@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container } from "@material-ui/core";
+import React, { useEffect, useState, useContext } from "react";
+import { Button, Container, GridList } from "@material-ui/core";
 import { ResizeProvider, ResizeConsumer } from "react-resize-context";
 import { makeStyles } from "@material-ui/core/styles";
 import MapTile from "./MapTile";
+import {MapContext, mapTypes} from "../state/mapContext";
 
-const generateGrid = (size, tileColour) => {
+const generateGrid = (generatedGrid) => {
+  return generatedGrid.map((row, rowIndex) => 
+    row.map((tile, tileIndex) => 
+      <MapTile tileColour={tile} position={[rowIndex, tileIndex]}/>));
+};
+
+const makeGrid = (size, tileColour) => {
   let grid = [];
 
   for (let i = 0; i < size.height/16; i++) {
     let row = [];
     for (let j = 0; j < size.width/16; j++) {
       row.push(
-        <MapTile tileColour={tileColour}/>
+        tileColour
       );
     }
     grid.push(row);
@@ -43,16 +50,24 @@ const useStyles = makeStyles({
 
 export default function MapEditor() {
   const classes = useStyles();
-  const [tileColour, setColour] = useState("blue")
   const [size, setSize] = React.useState({width: 509, height: 417});
   const [grid, setGrid] = useState();
+  const {mapState, dispatch} = useContext(MapContext);
 
   useEffect(() => {
-    const grid = generateGrid(size, tileColour);
+    const generatedGrid = makeGrid(size, "blue");
+    const gridToRender = generateGrid(generatedGrid);
 
-    setGrid(grid);
+    setGrid(gridToRender);
+    dispatch({ type: mapTypes.CREATE_MAP, payload: generatedGrid})
 
-  }, [tileColour, size])
+  }, [size])
+
+  const handleLoadMap = () => {
+    const loadedGrid = generateGrid(mapState.savedMap);
+    console.log("loaded Map", mapState.savedMap)
+    setGrid(loadedGrid);
+  }
   
   const handleSizeChanged = (newSize) => {
     setSize(newSize);
@@ -70,9 +85,11 @@ export default function MapEditor() {
   return (
     <>
       <Container className={classes.buttonContainerStyle}>
-        <Button color="primary" onClick={() => setColour("blue")}>Walkable</Button>
-        <Button color="secondary" onClick={() => setColour("red")}>Blockable</Button>
-        <Button onClick={() => setColour("yellow")}>Interactable</Button>
+        <Button color="primary" onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "blue"})}>Walkable</Button>
+        <Button color="secondary" onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "red"})}>Blockable</Button>
+        <Button onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "yellow"})}>Interactable</Button>
+        <Button variant="contained" onClick={() => dispatch({ type: mapTypes.SAVE_MAP })}>Save</Button>
+        <Button variant="contained" onClick={handleLoadMap}>Load</Button>
       </Container>
       <Container className={classes.editMapContainerStyle}>
           <ResizeProvider>
@@ -85,7 +102,6 @@ export default function MapEditor() {
                       marginLeft: "-10px"
                     }}
                   >
-                    {/* {generateGrid(size, tileColour)} */}
                     {grid}
                   </div>
                 </div>

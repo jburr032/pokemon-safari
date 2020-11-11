@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import {MapContext, mapTypes} from "../state/mapContext";
 
-export default function MapTile({ tileColour }){
-    const [defaultColour, setDefault] = useState("blue");
+export default function MapTile({ position }){
+    const [currColour, setCurrColour] = useState("blue");
+    const {mapState, dispatch} = useContext(MapContext);
+
+    useEffect(() => {
+      dispatch({ type: mapTypes.UPDATE_MAP, payload: [currColour, position]})
+
+    }, [currColour])
 
     const handleColourClick = () => {
-      if(tileColour !== defaultColour) setDefault(tileColour);
+      console.log(mapState.selectedColour)
+      setCurrColour(mapState.selectedColour)
     }
 
    const styles= {
@@ -14,12 +22,12 @@ export default function MapTile({ tileColour }){
         display: "inline-flex",
         zIndex: 2,
         color: "transparent",
-        backgroundColor: defaultColour,
+        backgroundColor: currColour,
         opacity: "30%",
         position: "relative",
         border: "1px solid white",
         cursor: "pointer"
       }
     
-    return <div style={styles} onClick={handleColourClick}>0</div>
+    return <div onMouseEnter={() => console.log(position)} style={styles} onClick={handleColourClick}>0</div>
 }
