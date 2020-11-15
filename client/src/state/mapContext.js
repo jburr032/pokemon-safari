@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import axios from "axios";
 
 export const mapTypes = {
   SAVE_MAP: "SAVE_MAP",
@@ -12,16 +13,16 @@ const initialMapState = {
   currMap: { mapArray: [[0]], mapName: "", mapFilepath: "" },
   currColour: "blue",
   savedMap: [],
+  saveError: false,
   selectedColour: "blue"
 };
 
-const mapReducer = (state, action) => {
+const mapReducer = async (state, action) => {
   const { SAVE_MAP } = mapTypes;
 
   switch (action.type) {
     case SAVE_MAP:
       return {...state, savedMap: action.payload };
-
     default:
       return initialMapState;
   }

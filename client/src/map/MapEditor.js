@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Button, Container, FormControl, OutlinedInput, InputAdornment } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MapTile from "./MapTile";
-import {MapContext, mapTypes} from "../state/mapContext";
+import {MapContext } from "../state/mapContext";
+import MapEditorButtons from './MapEditorButtons'
 
 const makeGrid = (size, tileColour) => {
   let grid = [];
@@ -38,12 +38,12 @@ const useStyles = makeStyles({
 
 export default function MapEditor() {
   const classes = useStyles();
-  const [gridHeight, setHeight] = useState(0);
-  const [gridWidth, setWidth] = useState(0);
+  const [gridHeight, setHeight] = useState(417);
+  const [gridWidth, setWidth] = useState(509);
   const [size, setSize] = useState({width: 509, height: 417});
   const [grid, setGrid] = useState([[]]);
-  const [selectedColour, setColour] = useState("blue")
-  const {mapState, dispatch} = useContext(MapContext);
+  const [selectedColour, setColour] = useState("blue");
+  const {mapState} = useContext(MapContext);
 
   useEffect(() => {
     const rawGrid = makeGrid(size, "blue");
@@ -65,44 +65,32 @@ export default function MapEditor() {
   }
 
   const handleHeightChange = (e) => {
-    console.log(e.target.value)
-
-    setHeight(e.target.value);
+    const gridHeight = e.target.value;
+    if(gridHeight%16 === 0) {
+      setHeight(e.target.value);
+    }
+    else setHeight(0);
   }
 
   const handleWidthChange = (e) => {
-    console.log(e.target.value)
-    setWidth(e.target.value);
-  }
+    const gridWidth = e.target.value;
+    if(gridWidth%16 === 0) {
+      setWidth(e.target.value);
+    }
+    else setWidth(0);  }
   
   return (
     <>
-      <Container className={classes.buttonContainerStyle}>
-        <div>
-          <Button color="primary" onClick={() => setColour("blue")}>Walkable</Button>
-          <Button color="secondary" onClick={() => setColour("red")}>Blockable</Button>
-          <Button onClick={() => setColour("yellow")}>Interactable</Button>
-        </div>
-        <div>
-          <Button style={{ marginRight: "10px" }} variant="contained" onClick={() => dispatch({ type: mapTypes.SAVE_MAP, payload: grid })}>Save</Button>
-          <Button variant="contained" onClick={handleLoadMap}>Load</Button>
-        </div>
-        <hr />
-          <OutlinedInput
-            // value={values.weight}
-            // onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end"><Button style={{ width: '100px'}} onClick={() => setSize(prev => ({width: prev.width, height: gridHeight}))}>Height</Button></InputAdornment>}
-            labelWidth={0}
-            onChange={(e) => handleHeightChange(e)}
-          />
-          <OutlinedInput
-            // value={values.weight}
-            // onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end"><Button style={{ width: '100px'}} onClick={() => setSize(prev => ({width: gridWidth, height: prev.height}))}>Width</Button></InputAdornment>}
-            labelWidth={0}
-            onChange={(e) => handleWidthChange(e)}
-          />
-      </Container>
+      <MapEditorButtons
+        grid={grid}
+        setSize={setSize}
+        gridHeight={gridHeight}
+        gridWidth={gridWidth}
+        handleWidthChange={handleWidthChange} 
+        handleHeightChange={handleHeightChange}
+        setColour={setColour}
+        handleLoadMap={handleLoadMap}
+      />
       <div className={classes.mapImageStyles}>
         <div
           style={{
