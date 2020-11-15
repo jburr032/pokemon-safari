@@ -1,15 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Button, Container, GridList } from "@material-ui/core";
-import { ResizeProvider, ResizeConsumer } from "react-resize-context";
+import { Button, Container, FormControl, OutlinedInput, InputAdornment } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MapTile from "./MapTile";
 import {MapContext, mapTypes} from "../state/mapContext";
-
-const generateGrid = (generatedGrid) => {
-  return generatedGrid.map((row, rowIndex) => 
-    row.map((tile, tileIndex) => 
-      <MapTile tileColour={tile} position={[rowIndex, tileIndex]}/>));
-};
 
 const makeGrid = (size, tileColour) => {
   let grid = [];
@@ -17,10 +10,9 @@ const makeGrid = (size, tileColour) => {
   for (let i = 0; i < size.height/16; i++) {
     let row = [];
     for (let j = 0; j < size.width/16; j++) {
-      row.push(
-        tileColour
-      );
+      row.push(tileColour);
     }
+
     grid.push(row);
   }
 
@@ -31,83 +23,103 @@ const useStyles = makeStyles({
   buttonContainerStyle: {
     alignContent: "center",
     height: "20px",
-    marginBottom: "30px"
+    marginBottom: "241px",
   },
-  resizableContainer: {
-    display: "inline-flex",
-    flexDirection: "column",
-    width: "509px",
-    height: "417px",
-    resize: "both",
-    overflow: "hidden",
-    background: "#d7dfe2",
-    zIndex: 0,
+  mapImageStyles: {
     backgroundImage: "url(sprites/pallet_town.png)",
     backgroundRepeat: "no-repeat",
-    marginLeft: "-40px"
+    zIndex: 4,
+    height: "512px",
+    width: "512px",
+    marginTop: "60px",
+    marginLeft: "-80px"
   }
 });
 
 export default function MapEditor() {
   const classes = useStyles();
-  const [size, setSize] = React.useState({width: 509, height: 417});
-  const [grid, setGrid] = useState();
+  const [gridHeight, setHeight] = useState(0);
+  const [gridWidth, setWidth] = useState(0);
+  const [size, setSize] = useState({width: 509, height: 417});
+  const [grid, setGrid] = useState([[]]);
+  const [selectedColour, setColour] = useState("blue")
   const {mapState, dispatch} = useContext(MapContext);
 
   useEffect(() => {
-    const generatedGrid = makeGrid(size, "blue");
-    const gridToRender = generateGrid(generatedGrid);
-
-    setGrid(gridToRender);
-    dispatch({ type: mapTypes.CREATE_MAP, payload: generatedGrid})
-
+    const rawGrid = makeGrid(size, "blue");
+    setGrid(rawGrid)
+  // eslint-disable-next-line 
   }, [size])
 
+  const handleClick = (position) => {
+    const [y,x] = position.split(",");
+    const tempGrid = grid.map(row => [...row]);
+    tempGrid[y][x] = selectedColour;
+
+    setGrid(tempGrid)
+  }
+
   const handleLoadMap = () => {
-    const loadedGrid = generateGrid(mapState.savedMap);
-    console.log("loaded Map", mapState.savedMap)
-    setGrid(loadedGrid);
+    const loadedMap = mapState.savedMap;
+    setGrid(loadedMap)
+  }
+
+  const handleHeightChange = (e) => {
+    console.log(e.target.value)
+
+    setHeight(e.target.value);
+  }
+
+  const handleWidthChange = (e) => {
+    console.log(e.target.value)
+    setWidth(e.target.value);
   }
   
-  const handleSizeChanged = (newSize) => {
-    setSize(newSize);
-  };
-
-  const resizeTest = () => (
-    <ResizeConsumer
-      onSizeChanged={handleSizeChanged}
-      className={classes.resizeContentStyles}
-    >
-      {`${size.width}x${size.height}`}
-    </ResizeConsumer>
-  );
-
   return (
     <>
       <Container className={classes.buttonContainerStyle}>
-        <Button color="primary" onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "blue"})}>Walkable</Button>
-        <Button color="secondary" onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "red"})}>Blockable</Button>
-        <Button onClick={() => dispatch({ type: mapTypes.SET_COLOUR, payload: "yellow"})}>Interactable</Button>
-        <Button variant="contained" onClick={() => dispatch({ type: mapTypes.SAVE_MAP })}>Save</Button>
-        <Button variant="contained" onClick={handleLoadMap}>Load</Button>
+        <div>
+          <Button color="primary" onClick={() => setColour("blue")}>Walkable</Button>
+          <Button color="secondary" onClick={() => setColour("red")}>Blockable</Button>
+          <Button onClick={() => setColour("yellow")}>Interactable</Button>
+        </div>
+        <div>
+          <Button style={{ marginRight: "10px" }} variant="contained" onClick={() => dispatch({ type: mapTypes.SAVE_MAP, payload: grid })}>Save</Button>
+          <Button variant="contained" onClick={handleLoadMap}>Load</Button>
+        </div>
+        <hr />
+          <OutlinedInput
+            // value={values.weight}
+            // onChange={handleChange('weight')}
+            endAdornment={<InputAdornment position="end"><Button style={{ width: '100px'}} onClick={() => setSize(prev => ({width: prev.width, height: gridHeight}))}>Height</Button></InputAdornment>}
+            labelWidth={0}
+            onChange={(e) => handleHeightChange(e)}
+          />
+          <OutlinedInput
+            // value={values.weight}
+            // onChange={handleChange('weight')}
+            endAdornment={<InputAdornment position="end"><Button style={{ width: '100px'}} onClick={() => setSize(prev => ({width: gridWidth, height: prev.height}))}>Width</Button></InputAdornment>}
+            labelWidth={0}
+            onChange={(e) => handleWidthChange(e)}
+          />
       </Container>
-      <Container className={classes.editMapContainerStyle}>
-          <ResizeProvider>
-                <div className={classes.resizableContainer}>
-                  <div
-                    style={{
-                      width: size.width,
-                      height: size.height,
-                      zIndex: 5,
-                      marginLeft: "-10px"
-                    }}
-                  >
-                    {grid}
-                  </div>
-                </div>
-                <div>{resizeTest()}</div>
-          </ResizeProvider>
-      </Container>
+      <div className={classes.mapImageStyles}>
+        <div
+          style={{
+          width: "512px",
+          height: "512px",
+          zIndex: 5,
+          marginLeft: "-18px",
+          }}>
+            {grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
+              <MapTile 
+                key={`${rowIndex}-${tileIndex}`} 
+                tileColour={tile} 
+                position={[rowIndex, tileIndex]}
+                onClick={handleClick}/>))
+            }
+        </div>
+      </div>
     </>
   );
 }
