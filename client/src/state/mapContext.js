@@ -17,7 +17,7 @@ const initialMapState = {
   selectedColour: "blue"
 };
 
-const mapReducer = async (state, action) => {
+const mapReducer = (state, action) => {
   const { SAVE_MAP } = mapTypes;
 
   switch (action.type) {

@@ -26,15 +26,16 @@ export default function MapEditorButtons({
     const [err, setErr] = useState(false);
 
     const handleSave = async () => {
-      dispatch({ type: mapTypes.SAVE_MAP, payload: grid });
       try{      
-        await axios.post("/save_map", { message: mapState.savedMap });
-        setErr(false)
+        await axios.post("/save_map", { message: grid });
+        dispatch({ type: mapTypes.SAVE_MAP, payload: grid });
+        setErr(false);
 
       }catch(err){
         console.log("ERROR", err);
-        setErr(true)
+        setErr(true);
       }
+
     }
 
     return (
