@@ -17,6 +17,7 @@ export default function MapEditorContainer(){
   const classes = useStyles()
 
   return (
+    
     <Container style={{ textAlign: "center" }}>
       <Typography className={classes.mapNameStyle}>
               <a href="https://fontmeme.com/pokemon-font/">
@@ -30,5 +31,6 @@ export default function MapEditorContainer(){
       </Typography>
       <MapEditor />
     </Container>
+    
   );
 };

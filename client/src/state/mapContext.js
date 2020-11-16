@@ -1,33 +1,28 @@
 import React, { useReducer } from "react";
-import {createMapHelper} from "./utils"
+import axios from "axios";
 
 export const mapTypes = {
   SAVE_MAP: "SAVE_MAP",
   CREATE_MAP: "CREATE_MAP",
   UPDATE_MAP: "UPDATE_MAP",
-  CHANGE_COLOUR: "CHANGE_COLOUR"
+  CHANGE_COLOUR: "CHANGE_COLOUR",
+  SET_COLOUR: "SET_COLOUR"
 };
 
 const initialMapState = {
   currMap: { mapArray: [[0]], mapName: "", mapFilepath: "" },
-  currColour: "blue"
+  currColour: "blue",
+  savedMap: [],
+  saveError: false,
+  selectedColour: "blue"
 };
 
 const mapReducer = (state, action) => {
-  const { SAVE_MAP, CREATE_MAP, UPDATE_MAP, CHANGE_COLOUR } = mapTypes;
+  const { SAVE_MAP } = mapTypes;
 
   switch (action.type) {
     case SAVE_MAP:
-      // saves current map to JSON file
-      return null;
-    case CREATE_MAP:
-      return {...state, currMap: createMapHelper(action.payload)};
-    case CHANGE_COLOUR:
-      console.log(action.payload);
-      return {...state, currColour: action.payload}
-    case UPDATE_MAP:
-      // accesses array based on coordinates and updates with value
-      return null;
+      return {...state, savedMap: action.payload };
     default:
       return initialMapState;
   }
