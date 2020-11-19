@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { Snackbar } from "@material-ui/core";
 import MapTile from "./MapTile";
-import {MapContext } from "../state/mapContext";
-import MapEditorButtons from './MapEditorButtons'
+import { MapContext } from "../state/mapContext";
+import MapEditorButtons from './MapEditorButtons';
+import MuiAlert from '@material-ui/lab/Alert';
+import axios from "axios";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const makeGrid = (size, tileColour) => {
   let grid = [];
@@ -19,14 +25,17 @@ const makeGrid = (size, tileColour) => {
   return grid;
 };
 
-const useStyles = makeStyles({
-  buttonContainerStyle: {
-    alignContent: "center",
-    height: "20px",
-    marginBottom: "241px",
-  },
-  mapImageStyles: {
-    backgroundImage: "url(sprites/pallet_town.png)",
+export default function MapEditor() {
+  const [gridHeight, setHeight] = useState(417);
+  const [gridWidth, setWidth] = useState(509);
+  const [size, setSize] = useState({width: 509, height: 417});
+  const [grid, setGrid] = useState([[]]);
+  const [selectedColour, setColour] = useState("blue");
+  const {mapState} = useContext(MapContext);
+  const [loadingMap, setLoading] = useState(false);
+
+  const mapImageStyles = {
+    backgroundImage: `url(sprites/${mapState.currMap}.png)`,
     backgroundRepeat: "no-repeat",
     zIndex: 4,
     height: "512px",
@@ -34,16 +43,10 @@ const useStyles = makeStyles({
     marginTop: "60px",
     marginLeft: "-80px"
   }
-});
 
-export default function MapEditor() {
-  const classes = useStyles();
-  const [gridHeight, setHeight] = useState(417);
-  const [gridWidth, setWidth] = useState(509);
-  const [size, setSize] = useState({width: 509, height: 417});
-  const [grid, setGrid] = useState([[]]);
-  const [selectedColour, setColour] = useState("blue");
-  const {mapState} = useContext(MapContext);
+  useEffect(() => {
+    handleLoadMap();
+  }, [mapState.currMap])
 
   useEffect(() => {
     const rawGrid = makeGrid(size, "blue");
@@ -59,9 +62,18 @@ export default function MapEditor() {
     setGrid(tempGrid)
   }
 
-  const handleLoadMap = () => {
-    const loadedMap = mapState.savedMap;
-    setGrid(loadedMap)
+  const handleLoadMap = async () => {
+    try{
+      setLoading(true);
+      const res = await axios.get(`/fetch_map/${mapState.currMap}`);
+      setGrid(res.data.savedGrid);
+      setLoading(false);
+
+    }catch(err){
+      console.error(err);
+      setLoading(false);
+    }
+
   }
 
   const handleHeightChange = (e) => {
@@ -77,10 +89,24 @@ export default function MapEditor() {
     if(gridWidth%16 === 0) {
       setWidth(e.target.value);
     }
-    else setWidth(0);  }
+    else setWidth(0);  
+  }
+  
+  const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+    
+      loadingMap && setLoading(false);
+    };
   
   return (
     <>
+      {loadingMap && <Snackbar open={loadingMap}>
+                    <Alert severity="info">
+                      Loading map...
+                    </Alert>
+                  </Snackbar>}
       <MapEditorButtons
         grid={grid}
         setSize={setSize}
@@ -91,7 +117,7 @@ export default function MapEditor() {
         setColour={setColour}
         handleLoadMap={handleLoadMap}
       />
-      <div className={classes.mapImageStyles}>
+      <div style={mapImageStyles}>
         <div
           style={{
           width: "512px",
@@ -99,7 +125,7 @@ export default function MapEditor() {
           zIndex: 5,
           marginLeft: "-18px",
           }}>
-            {grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
+            {grid && grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
               <MapTile 
                 key={`${rowIndex}-${tileIndex}`} 
                 tileColour={tile} 
