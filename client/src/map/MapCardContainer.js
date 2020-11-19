@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import {Typography} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MapCard from "./MapCard";
+import {MapContext} from "../state/mapContext";
 
 const useStyles = makeStyles({
     mapNameStyle: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles({
 });
 export default function MapCardContainer(){
     const classes = useStyles();
+    const {mapState} = useContext(MapContext);
 
     return (
         <Container style={{ textAlign: "center" }}>
@@ -29,7 +31,7 @@ export default function MapCardContainer(){
             </a>
             </Typography>
             <Grid container spacing={2} style={{ marginTop: "15px" }}>
-                <MapCard />
+                {mapState.listOfMaps.map(mapName => <MapCard name={mapName}/>)}
             </Grid>
         </Container>
     )

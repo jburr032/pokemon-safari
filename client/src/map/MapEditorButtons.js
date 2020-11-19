@@ -1,8 +1,13 @@
-import { Button, Container, FormHelperText, OutlinedInput, InputAdornment } from "@material-ui/core";
+import { Button, Container, FormHelperText, OutlinedInput, InputAdornment, Snackbar } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
 import { MapContext, mapTypes } from "../state/mapContext";
-import React, {useContext, useState, useEffect} from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles({
     buttonContainerStyle: {
@@ -22,14 +27,16 @@ export default function MapEditorButtons({
     handleLoadMap
 }){
     const classes = useStyles();
-    const {dispatch, mapState} = useContext(MapContext);
+    const {mapState,dispatch} = useContext(MapContext);
     const [err, setErr] = useState(false);
+    const [save, setSave] = useState(false);
 
     const handleSave = async () => {
       try{      
-        await axios.post("/save_map", { message: grid });
+        await axios.post("/save_map", { mapName: mapState.currMap, savedGrid: grid });
         dispatch({ type: mapTypes.SAVE_MAP, payload: grid });
         setErr(false);
+        setSave(true);
 
       }catch(err){
         console.log("ERROR", err);
@@ -38,9 +45,27 @@ export default function MapEditorButtons({
 
     }
 
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      err && setErr(false);
+      save && setSave(false);
+    };
+
     return (
         <Container className={classes.buttonContainerStyle}>
-          {err && alert("Save unsuccessful")}
+          {err && <Snackbar open={err} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="error">
+                      Save was unsuccessful!
+                    </Alert>
+                  </Snackbar>}
+          {save && <Snackbar open={save} autoHideDuration={3000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">
+                      Save was successful!
+                    </Alert>
+                  </Snackbar>}
         <div>
           <Button color="primary" onClick={() => setColour("blue")}>Walkable</Button>
           <Button color="secondary" onClick={() => setColour("red")}>Blockable</Button>
