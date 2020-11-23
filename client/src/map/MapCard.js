@@ -6,7 +6,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 
-import {MapContext, mapTypes} from '../state/mapContext'
+import {MapContext, mapTypes} from "../state/mapContext";
 
 export default function MapCard({name}){
     const {dispatch} = useContext(MapContext);

@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { MapProvider } from "./state/mapContext";
 
+
 ReactDOM.render(
   <React.StrictMode>
     <MapProvider>

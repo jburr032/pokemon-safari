@@ -1,5 +1,6 @@
-import { Button, Container, FormHelperText, OutlinedInput, InputAdornment, Snackbar } from "@material-ui/core";
+import { Button, Container, FormHelperText, OutlinedInput, InputAdornment, Snackbar, TextField } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from "@material-ui/core/styles";
 import { MapContext, mapTypes } from "../state/mapContext";
 import React, { useContext, useState } from "react";
@@ -79,6 +80,7 @@ export default function MapEditorButtons({
           <OutlinedInput
             endAdornment={<InputAdornment position="end"><Button disabled={gridHeight === 0 ? true : false } style={{ width: '100px'}} onClick={() => setSize(prev => ({width: prev.width, height: gridHeight}))}>Height</Button></InputAdornment>}
             labelWidth={0}
+            placeholder={gridHeight}
             onChange={(e) => handleHeightChange(e)}
             error={gridHeight === 0 ? true : false}
           />
@@ -87,9 +89,10 @@ export default function MapEditorButtons({
           <OutlinedInput
             endAdornment={<InputAdornment position="end"><Button disabled={gridWidth === 0 ? true : false } style={{ width: '100px'}} onClick={() => setSize(prev => ({width: gridWidth, height: prev.height}))}>Width</Button></InputAdornment>}
             labelWidth={0}
+            placeholder={gridWidth}
             onChange={(e) => handleWidthChange(e)}
-            error={gridWidth === 0 ? true : false}
-          />
+            error={gridWidth === 0 ? true : false} />
+                    
           {gridWidth === 0 && <FormHelperText id="filled-weight-helper-text">Must be divisible by 16</FormHelperText>}
 
       </Container>

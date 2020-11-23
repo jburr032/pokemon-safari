@@ -28,14 +28,15 @@ const makeGrid = (size, tileColour) => {
 export default function MapEditor() {
   const [gridHeight, setHeight] = useState(417);
   const [gridWidth, setWidth] = useState(509);
-  const [size, setSize] = useState({width: 509, height: 417});
+  const [size, setSize] = useState({width: 512, height: 512});
   const [grid, setGrid] = useState([[]]);
   const [selectedColour, setColour] = useState("blue");
   const {mapState} = useContext(MapContext);
   const [loadingMap, setLoading] = useState(false);
+  const [fetchedMapfile, setMapFile] = useState('');
 
   const mapImageStyles = {
-    backgroundImage: `url(sprites/${mapState.currMap}.png)`,
+    backgroundImage: `url(maps/${fetchedMapfile}.png)`,
     backgroundRepeat: "no-repeat",
     zIndex: 4,
     height: "512px",
@@ -45,14 +46,12 @@ export default function MapEditor() {
   }
 
   useEffect(() => {
-    handleLoadMap();
-  }, [mapState.currMap])
+    setGrid(makeGrid(size, "blue"))
+  }, [])
 
   useEffect(() => {
-    const rawGrid = makeGrid(size, "blue");
-    setGrid(rawGrid)
-  // eslint-disable-next-line 
-  }, [size])
+    if(mapState.currMap) handleLoadMap();
+  }, [mapState.currMap])
 
   const handleClick = (position) => {
     const [y,x] = position.split(",");
@@ -65,8 +64,10 @@ export default function MapEditor() {
   const handleLoadMap = async () => {
     try{
       setLoading(true);
-      const res = await axios.get(`/fetch_map/${mapState.currMap}`);
-      setGrid(res.data.savedGrid);
+      const resGrid = await axios.get(`/fetch_map/${mapState.currMap}`);
+      setGrid(resGrid.data.savedGrid);
+      setMapFile(mapState.currMap);
+
       setLoading(false);
 
     }catch(err){
@@ -91,15 +92,7 @@ export default function MapEditor() {
     }
     else setWidth(0);  
   }
-  
-  const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-    
-      loadingMap && setLoading(false);
-    };
-  
+
   return (
     <>
       {loadingMap && <Snackbar open={loadingMap}>
