@@ -1,13 +1,12 @@
-import React, {useRef} from "react";
-import { useDrag, useDrop, DragPreviewImage } from "react-dnd";
+import React from "react";
+import { useDrag } from "react-dnd";
 import ITEM_TYPES from "./itemTypes";
 
 const MapDraggable = ({ map, family, itemIndex }) => {
-
-    const [{ isDragging }, drag, preview] = useDrag({
+    const [{ isDragging }, drag] = useDrag({
         item: {
           type: `${ITEM_TYPES.MAP}`,
-          map: {...map},
+          ...map,
           itemIndex
         },
         collect: (monitor) => {
@@ -16,12 +15,9 @@ const MapDraggable = ({ map, family, itemIndex }) => {
       });
     
     return (
-        <>
-            <DragPreviewImage connect={<div>{preview}</div>} src={map.src} />
             <div style={{ opacity: isDragging ? 0 : 1 }} ref={drag}>
-                <img src={map.src} width="100%" height="100%" />
+                <img src={map.src} alt="map" width="100%" height="100%" />
             </div>
-        </>
     )
 }
 
