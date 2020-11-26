@@ -54,5 +54,5 @@ export const TEST_DATA = [[
         {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
         {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
         {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""}, 
-    ]
+    ],
 ]

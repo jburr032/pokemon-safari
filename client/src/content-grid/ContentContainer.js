@@ -4,7 +4,7 @@ import DropSquare from "./DropSquare";
 import { dropTiles, dropZones, TEST_DATA } from "./data";
 import ITEM_TYPES from "./itemTypes";
 import { handleMove } from "./utils/handleMove";
-import {Paper, Table, TableRow, TableCell, TableContainer} from '@material-ui/core';
+import {Paper, Table, TableRow, TableCell, TableContainer, Grid, List, ListItem, Container} from '@material-ui/core';
 
 
 const ContentContainer = () => {
@@ -45,7 +45,8 @@ const ContentContainer = () => {
     const editorSquareStyles = {
         border: "1px dashed black", 
         width: "186px", 
-        height: "186px",
+        height: "186px"
+        
     };
 
     const mapSquareStyles = {
@@ -64,18 +65,26 @@ const ContentContainer = () => {
     }
 
     return (
-        <div style={{  }}>
-            <h1>HELLO</h1>
-        <TableContainer component={Paper} style={{ width: "1000px", height: "900px", overflowX: 'auto'}}>
-            <Table>
-                {
-                    TEST_DATA.map(d => <TableRow>
-                        {d.map(t => <TableCell style={editorSquareStyles}>{t.src}</TableCell>)}
-                    </TableRow>)
-                }
-            </Table>
-        </TableContainer>
-        </div>
+        <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
+                    <List style={{ marginLeft: '-23px', position: 'absolute' }}>
+                        <ListItem>
+                            <img width='180px' height='180px' src='/maps/safari_zone.png' />
+                        </ListItem>
+                        <ListItem>
+                            <img width='180px' height='180px' src='/maps/bills.png' />
+                        </ListItem>
+                    </List>
+                    <TableContainer style={{ width: "800px", height: "800px", overflowX: 'auto', marginLeft: '244px'}}>
+                        <Table style={{ tableLayout: "fixed" }}>
+                            {
+                                TEST_DATA.map(d => <TableRow>
+                                    {d.map(t => <TableCell style={editorSquareStyles}>{t.src}</TableCell>)}
+                                </TableRow>)
+                            }
+                        </Table>
+                    </TableContainer>
+        </Container>
+        
         // <div style={{ height: "75%", width: "1900px", display: "inline-flex", whiteSpace: "nowrap"}}>
         //     {dropZones.map((zone) => {
         //         let renderTiles;
