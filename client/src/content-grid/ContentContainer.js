@@ -88,11 +88,17 @@ const ContentContainer = () => {
         // <div style={{ height: "75%", width: "1900px", display: "inline-flex", whiteSpace: "nowrap"}}>
         //     {dropZones.map((zone) => {
         //         let renderTiles;
+                   // filter tiles based on family
         //         const returnedTiles = tiles.filter(tile => tile.family === zone.type);
+
+                   // Then filter each type to add style
         //         const tileStyle = zone.type === ITEM_TYPES.SIDE_BAR ? mapSquareStyles : editorSquareStyles;
         //         const windowStyle =  zone.type === ITEM_TYPES.SIDE_BAR ? sidebarWindow : editorWindow;
+
+                   // Checks length of non-empty tiles to then generate a number of empty placeholder tiles
         //         const mapTilesLength = returnedTiles.filter(tile => tile.src !== "").length;
 
+                   // Checks length of non-empty tiles to then generate a number of empty placeholder tiles
         //         if(zone.type === ITEM_TYPES.SIDE_BAR && mapTilesLength === 0){
 
         //             if(mapTilesLength === 0){
