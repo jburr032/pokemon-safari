@@ -44,8 +44,8 @@ const ContentContainer = () => {
 
     const editorSquareStyles = {
         border: "1px dashed black", 
-        width: "186px", 
-        height: "186px"
+        width: "368px", 
+        height: "368px"
         
     };
 
