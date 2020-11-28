@@ -5,21 +5,24 @@
  */
 import ITEM_TYPES from "../itemTypes";
 
-export const handleMove = (newItems, baseItem, family, index) => {
+// @PARAMETER baseItem is the item being moved
+// @PARAMETER index is the target's zone - will need to be an array even if only one element
+// handleMove(sidebarArr, editorArr, baseItem, family, index)
+export const handleMove = (sideBarArr, editorArr, baseItem, family, index) => {
     const item = {...baseItem};
     const emptyDroppableSquare = {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" }
 
-    let editorArr = [...newItems].filter(item => item.family === ITEM_TYPES.EDITOR);
-    let sideBarArr = [...newItems].filter(item => item.family === ITEM_TYPES.SIDE_BAR);
+    // let editorArr = [...newItems].filter(item => item.family === ITEM_TYPES.EDITOR);
+    // let sideBarArr = [...newItems].filter(item => item.family === ITEM_TYPES.SIDE_BAR);
 
     
     if(item.family === ITEM_TYPES.SIDE_BAR && family === ITEM_TYPES.EDITOR){
         item.family = family;
 
 
-        if(editorArr[index].src !== ""){
+        if(editorArr[index[0]][index[1]].src !== ""){
             // Get the item in the editor that will swapped out
-            const itemInEditor = {...editorArr[index]};
+            const itemInEditor = {...editorArr[index[0]][index[1]]};
             itemInEditor.family = ITEM_TYPES.SIDE_BAR;
 
             sideBarArr.splice(item.itemIndex, 1);
@@ -29,9 +32,9 @@ export const handleMove = (newItems, baseItem, family, index) => {
             mapTiles.push(itemInEditor);
             sideBarArr = [...mapTiles, ...emptyTiles];
 
-            editorArr.splice(index, 1, item);            
+            editorArr[index[0]].splice(index[1], 1, item);            
         }else{
-            editorArr[index] = item;
+            editorArr[index[0]][index[1]] = item;
             sideBarArr.splice(item.itemIndex, 1);
         }
 
@@ -50,7 +53,7 @@ export const handleMove = (newItems, baseItem, family, index) => {
         const mapTiles = sideBarArr.filter(tile => tile.src !== "");
         emptyTiles.pop();
         sideBarArr = [...mapTiles, ...emptyTiles];
-        editorArr[item.itemIndex] = {...emptyDroppableSquare};
+        editorArr[item.itemIndex[0]][item.itemIndex[1]] = {...emptyDroppableSquare};
 
         if(sideBarArr.length < 5){
             sideBarArr.push({family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP,src: "" });
@@ -59,9 +62,9 @@ export const handleMove = (newItems, baseItem, family, index) => {
     }
 
     else if(item.family === ITEM_TYPES.EDITOR && family === ITEM_TYPES.EDITOR){
-        if(editorArr[index].src === ""){
-            editorArr[index] = item;
-            editorArr[item.itemIndex] = {...emptyDroppableSquare};
+        if(editorArr[index[0]][index[1]].src === ""){
+            editorArr[index[0]][index[1]] = item;
+            editorArr[item.itemIndex[0]][item.itemIndex[1]] = {...emptyDroppableSquare};
         }
 
     }
@@ -78,6 +81,6 @@ export const handleMove = (newItems, baseItem, family, index) => {
         sideBarArr = [...mapTiles, ...emptyTiles];
     }
 
-    return [...sideBarArr, ...editorArr]
+    return { sideBarArr, editorArr };
 
 };

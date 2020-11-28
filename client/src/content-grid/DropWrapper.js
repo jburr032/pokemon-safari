@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import ITEM_TYPE from "./itemTypes";
 import { editorList } from "./data";
 
-const DropWrapper = ({ onDrop, family, children, index, expandEditorGrid }) => {
+const DropWrapper = ({ onDrop, family, children, index }) => {
     const [{ isOver }, drop] = useDrop({
         accept: `${ITEM_TYPE.MAP}`,
         // canDrop: (item, monitor) => {
@@ -15,9 +15,9 @@ const DropWrapper = ({ onDrop, family, children, index, expandEditorGrid }) => {
         collect: monitor => ({
             isOver: monitor.isOver()
         }),
-        hover(item){
-            expandEditorGrid(index);
-        }
+        // hover(item){
+        //     expandEditorGrid(index);
+        // }
     });
 
     return (

@@ -15,7 +15,7 @@ const MapDraggable = ({ map, family, itemIndex }) => {
       });
     
     return (
-            <div style={{ opacity: isDragging ? 0 : 1 }} ref={drag}>
+            <div style={{ opacity: isDragging ? 0 : 1, width: "100%", height: "100%" }} ref={drag}>
                 <img src={map.src} alt="map" width="100%" height="100%" />
             </div>
     )

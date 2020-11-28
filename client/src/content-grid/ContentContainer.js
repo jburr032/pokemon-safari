@@ -1,30 +1,48 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DropWrapper from "./DropWrapper";
 import DropSquare from "./DropSquare";
 import { dropTiles, dropZones, TEST_DATA } from "./data";
 import ITEM_TYPES from "./itemTypes";
 import { handleMove } from "./utils/handleMove";
-import {Paper, Table, TableRow, TableCell, TableContainer, Grid, List, ListItem, Container} from '@material-ui/core';
+import { Table, TableRow, TableCell, TableContainer, List, ListItem, Container} from '@material-ui/core';
 
 
 const ContentContainer = () => {
-    const [tiles, setTiles] = useState(dropTiles);
-
-    const expandEditorGrid = (index) => {
-        const editorTiles = tiles.filter(tile => tile.family === ITEM_TYPES.EDITOR);
-
-        console.log(editorTiles)
-        console.log(editorTiles[index])
-    }
+    // Sidebar and Editor tiles
+    const [sidebarTiles, setSidebarTiles] = useState(dropTiles);
+    const [editorSquares, setEditorSquare] = useState(TEST_DATA);
+    
+    // Handles editor scaling
+    const [keyPressed, setKeyDownPressed] = useState('');
+    const [leftBracketPress, setLeftBracket] = useState(false);
+    const [rightBracketPress, setRightBracket] = useState(false);
+    const [editorSquareHeight, setSquareHeight] = useState(368);
+    const [editorSquareWidth, setSquareWidth] = useState(368);
 
     const onDrop = (item, family, index) => {
-        setTiles(prevState => {
-            let newItems = [...prevState];
-            
-            newItems = handleMove(newItems, item, family, index);
-            return newItems;
-        });
+        let sideBarTiles = [...sidebarTiles];
+        let editableSquares = [...editorSquares];            
+        const { sideBarArr, editorArr } = handleMove(sideBarTiles, editableSquares, item, family, index);
+        setSidebarTiles(sideBarArr);
+        setEditorSquare(editorArr);       
     };
+
+    useEffect(() => {
+        if(keyPressed === 'Control' && leftBracketPress ){
+            setSquareHeight(prev => prev !== 118 ? prev - 50 : prev);
+            setSquareWidth(prev => prev !== 118 ? prev - 50 : prev);
+            setKeyDownPressed('');
+            setLeftBracket(false);
+        }else if(keyPressed === 'Control' && rightBracketPress ){
+            setSquareHeight(prev => prev + 50);
+            setSquareWidth(prev => prev + 50);
+            setKeyDownPressed('');
+            setRightBracket(false);
+        }
+
+        window.removeEventListener('keyup', ()=>{});
+        window.removeEventListener('keyup', ()=>{});
+    }, [keyPressed, leftBracketPress, rightBracketPress]);
 
     const editorWindow = {
         border: "1px solid black", 
@@ -40,17 +58,15 @@ const ContentContainer = () => {
         width: "21%", 
         height: "800px", 
         overflow: "auto" 
-    }
+    };
 
     const editorSquareStyles = {
         border: "1px dashed black", 
-        width: "368px", 
-        height: "368px"
-        
+        width: editorSquareWidth, 
+        height: editorSquareHeight
     };
 
     const mapSquareStyles = {
-        border: "1px solid black", 
         float: "left", 
         width: "175px", 
         height: "125px",
@@ -64,63 +80,84 @@ const ContentContainer = () => {
         height: "125px"
     }
 
+    const handleEventAdd = () => {
+        window.addEventListener('keydown', (event) => {
+            const key = (' ' + event.key).slice(1);
+            setKeyDownPressed(key);
+        });
+
+        window.addEventListener('keydown', (event) => {
+            const key = (' ' + event.key).slice(1);
+            if(key === "<") setLeftBracket(true);
+            else if(key === ">") setRightBracket(true);
+        });
+        
+    }
+
+    const processDropZones = (zone) => {
+        let tilesToProcess;
+        let processedTiles;
+        let windowStyle;
+
+        if(zone.type === ITEM_TYPES.SIDE_BAR){
+            tilesToProcess = [...sidebarTiles];
+            windowStyle = sidebarWindow;
+
+            // Sets a div the full width of the sidebar for a dropzone area
+            if(tilesToProcess.length === 0){
+                const emptySidebarTile = { family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
+
+                processedTiles = 
+                <ListItem>
+                    <DropWrapper onDrop={onDrop} family={zone.type} index={0}>
+                        <DropSquare tile={emptySidebarTile} style={{...windowStyle, width: "100%"}} family={zone.type} itemIndex={0} />
+                    </DropWrapper>
+                </ListItem>
+
+
+            }else{
+                processedTiles = tilesToProcess.map((tile, index) => 
+                    <ListItem>
+                        <DropWrapper onDrop={onDrop} family={zone.type} index={index}>
+                            <DropSquare tile={tile} style={tile.src === "" ? sidebarEmptyTile : mapSquareStyles} family={zone.type} itemIndex={index} />
+                        </DropWrapper>
+                    </ListItem>
+
+                )
+            }
+
+
+        }else{
+            tilesToProcess = [...editorSquares];
+            windowStyle = editorWindow;
+
+            // Somewhat repetitive code but need to map through nested array here
+            processedTiles = tilesToProcess.map((tileRow, rowIndex) => 
+             <TableRow>
+                {tileRow.map((tile, tileIndex) => 
+                <TableCell style={{ padding: 0 }}>
+                    <DropWrapper onDrop={onDrop} family={zone.type} index={[rowIndex, tileIndex]} style={{ width: "100%", height: "100%" }}>
+                        <DropSquare tile={tile} style={editorSquareStyles} family={zone.type} itemIndex={[rowIndex, tileIndex]} />
+                    </DropWrapper>
+                </TableCell>
+                )}
+             </TableRow>
+
+            );
+
+        }
+        return processedTiles;
+    };
+
     return (
         <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
-                    <List style={{ marginLeft: '-23px', position: 'absolute' }}>
-                        <ListItem>
-                            <img width='180px' height='180px' src='/maps/safari_zone.png' />
-                        </ListItem>
-                        <ListItem>
-                            <img width='180px' height='180px' src='/maps/bills.png' />
-                        </ListItem>
-                    </List>
-                    <TableContainer style={{ width: "800px", height: "800px", overflowX: 'auto', marginLeft: '244px'}}>
-                        <Table style={{ tableLayout: "fixed" }}>
-                            {
-                                TEST_DATA.map(d => <TableRow>
-                                    {d.map(t => <TableCell style={editorSquareStyles}>{t.src}</TableCell>)}
-                                </TableRow>)
-                            }
+             <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZones[0])}</List>
+             <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
+                        <Table onClick={handleEventAdd} style={{ width: "50%" }}>
+                            {processDropZones(dropZones[1])}
                         </Table>
                     </TableContainer>
         </Container>
-        
-        // <div style={{ height: "75%", width: "1900px", display: "inline-flex", whiteSpace: "nowrap"}}>
-        //     {dropZones.map((zone) => {
-        //         let renderTiles;
-                   // filter tiles based on family
-        //         const returnedTiles = tiles.filter(tile => tile.family === zone.type);
-
-                   // Then filter each type to add style
-        //         const tileStyle = zone.type === ITEM_TYPES.SIDE_BAR ? mapSquareStyles : editorSquareStyles;
-        //         const windowStyle =  zone.type === ITEM_TYPES.SIDE_BAR ? sidebarWindow : editorWindow;
-
-                   // Checks length of non-empty tiles to then generate a number of empty placeholder tiles
-        //         const mapTilesLength = returnedTiles.filter(tile => tile.src !== "").length;
-
-                   // Checks length of non-empty tiles to then generate a number of empty placeholder tiles
-        //         if(zone.type === ITEM_TYPES.SIDE_BAR && mapTilesLength === 0){
-
-        //             if(mapTilesLength === 0){
-        //                 console.log('returnedTiles if')
-        //                 const emptySidebarTile = { family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
-        //                 renderTiles = <DropWrapper onDrop={onDrop} family={zone.type} index={0}>
-        //                                             <DropSquare tile={emptySidebarTile} style={{...windowStyle, width: "100%"}} family={zone.type} itemIndex={0} />
-        //                                     </DropWrapper>;
-        //             }
-
-        //         }
-
-        //         else{
-        //             renderTiles = returnedTiles.map((tile, index) => 
-        //                 <DropWrapper onDrop={onDrop} family={zone.type} index={index} expandEditorGrid={expandEditorGrid}>
-        //                     <DropSquare tile={tile} style={tile.family === ITEM_TYPES.SIDE_BAR && tile.src === "" ? sidebarEmptyTile : tileStyle} family={zone.type} itemIndex={index} />
-        //                 </DropWrapper>
-        //         )}
-
-        //          return <TableRow><div style={windowStyle}>{renderTiles}</div></TableRow>
-        //     })}
-        // </div>
     )
 }
 
