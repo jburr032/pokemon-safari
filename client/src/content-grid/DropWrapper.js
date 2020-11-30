@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDrop } from "react-dnd";
 import ITEM_TYPE from "./itemTypes";
-import { editorList } from "./data";
 
-const DropWrapper = ({ onDrop, family, children, index }) => {
+const DropWrapper = ({ onDrop, family, children, index, editorSquaresArr, handleExpansion }) => {
+    const indexRef = useRef([0,0]);
     const [{ isOver }, drop] = useDrop({
         accept: `${ITEM_TYPE.MAP}`,
         // canDrop: (item, monitor) => {
@@ -15,9 +15,19 @@ const DropWrapper = ({ onDrop, family, children, index }) => {
         collect: monitor => ({
             isOver: monitor.isOver()
         }),
-        // hover(item){
-        //     expandEditorGrid(index);
-        // }
+        hover(){
+            indexRef.current = indexRef.current[0] !== index[0] && indexRef.current[1] !== index[1];
+            console.log(indexRef.current)
+            if(editorSquaresArr){
+                setTimeout(() => {
+                    const editorArrLength = editorSquaresArr.length-1;
+                    if((index[0] === editorArrLength) || index[1] === editorSquaresArr[index[0]].length -1){
+                        // handleExpansion();
+                    }
+                }, 2000)
+            }
+             
+        }
     });
 
     return (

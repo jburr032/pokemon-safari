@@ -10,7 +10,7 @@ import ITEM_TYPES from "../itemTypes";
 // handleMove(sidebarArr, editorArr, baseItem, family, index)
 export const handleMove = (sideBarArr, editorArr, baseItem, family, index) => {
     const item = {...baseItem};
-    const emptyDroppableSquare = {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" }
+    const emptyDroppableSquare = {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
 
     // let editorArr = [...newItems].filter(item => item.family === ITEM_TYPES.EDITOR);
     // let sideBarArr = [...newItems].filter(item => item.family === ITEM_TYPES.SIDE_BAR);
@@ -25,38 +25,38 @@ export const handleMove = (sideBarArr, editorArr, baseItem, family, index) => {
             const itemInEditor = {...editorArr[index[0]][index[1]]};
             itemInEditor.family = ITEM_TYPES.SIDE_BAR;
 
-            sideBarArr.splice(item.itemIndex, 1);
+            sideBarArr[0].splice(item.itemIndex[1], 1);
 
-            const emptyTiles = sideBarArr.filter(tile => tile.src === "");
-            const mapTiles = sideBarArr.filter(tile => tile.src !== "");
+            const emptyTiles = sideBarArr[0].filter(tile => tile.src === "");
+            const mapTiles = sideBarArr[0].filter(tile => tile.src !== "");
             mapTiles.push(itemInEditor);
-            sideBarArr = [...mapTiles, ...emptyTiles];
+            sideBarArr[0] = [...mapTiles, ...emptyTiles];
 
             editorArr[index[0]].splice(index[1], 1, item);            
         }else{
             editorArr[index[0]][index[1]] = item;
-            sideBarArr.splice(item.itemIndex, 1);
+            sideBarArr[0].splice(item.itemIndex[1], 1);
         }
 
-        if(sideBarArr.length < 5){
-               sideBarArr.push({family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP,src: "" });
+        if(sideBarArr[0].length < 5){
+               sideBarArr[0].push({family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP,src: "" });
         }else{
-            sideBarArr.pop();
+            sideBarArr[0].pop();
         }
     }
 
     else if(item.family === ITEM_TYPES.EDITOR && family === ITEM_TYPES.SIDE_BAR){
         item.family = family;
 
-        sideBarArr.splice(index, 0, item);
-        const emptyTiles = sideBarArr.filter(tile => tile.src === "");
-        const mapTiles = sideBarArr.filter(tile => tile.src !== "");
+        sideBarArr[index[0]].splice(index[1], 0, item);
+        const emptyTiles = sideBarArr[index[0]].filter(tile => tile.src === "");
+        const mapTiles = sideBarArr[index[0]].filter(tile => tile.src !== "");
         emptyTiles.pop();
-        sideBarArr = [...mapTiles, ...emptyTiles];
+        sideBarArr[index[0]] = [...mapTiles, ...emptyTiles];
         editorArr[item.itemIndex[0]][item.itemIndex[1]] = {...emptyDroppableSquare};
 
-        if(sideBarArr.length < 5){
-            sideBarArr.push({family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP,src: "" });
+        if(sideBarArr[index[0]].length < 5){
+            sideBarArr[index[0]].push({family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP,src: "" });
         }
 
     }
@@ -71,14 +71,15 @@ export const handleMove = (sideBarArr, editorArr, baseItem, family, index) => {
 
     // Move map within sidebar
     else{
-        const itemInEditor = {...sideBarArr[index]};
+        const [y, x] = index;
+        const itemInEditor = {...sideBarArr[y][x]};
+        
+        sideBarArr[y][x] = item;
+        sideBarArr[item.itemIndex[0]][item.itemIndex[1]] = itemInEditor;
 
-        sideBarArr[index] = item;
-        sideBarArr[item.itemIndex] = itemInEditor;
-
-        const emptyTiles = sideBarArr.filter(tile => tile.src === "");
-        const mapTiles = sideBarArr.filter(tile => tile.src !== "");
-        sideBarArr = [...mapTiles, ...emptyTiles];
+        const emptyTiles = sideBarArr[y].filter(tile => tile.src === "");
+        const mapTiles = sideBarArr[y].filter(tile => tile.src !== "");
+        sideBarArr = [[...mapTiles, ...emptyTiles]];
     }
 
     return { sideBarArr, editorArr };

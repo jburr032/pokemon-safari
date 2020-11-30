@@ -1,25 +1,30 @@
 import ITEM_TYPES from "./itemTypes";
 
-export const dropTiles = [
-    {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
-    {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
-    {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
-    {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
+export const dropTiles = [[
+        {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
+        {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
+        {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
+        {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
+    ]
+    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
     // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
+    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png"},
+    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
+    // // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/bills.png"},
 
-    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
-    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
-    // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
+    // // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
+    // // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
+    // // {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: ""},
 
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
     
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
-    {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""}, 
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""},
+    // {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP, src: ""}, 
     
 ];
 

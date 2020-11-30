@@ -4,7 +4,7 @@ import DropSquare from "./DropSquare";
 import { dropTiles, dropZones, TEST_DATA } from "./data";
 import ITEM_TYPES from "./itemTypes";
 import { handleMove } from "./utils/handleMove";
-import { Table, TableRow, TableCell, TableContainer, List, ListItem, Container} from '@material-ui/core';
+import { Table, TableRow, TableCell, TableContainer, List, ListItem, Container, TableBody } from '@material-ui/core';
 
 
 const ContentContainer = () => {
@@ -88,10 +88,21 @@ const ContentContainer = () => {
 
         window.addEventListener('keydown', (event) => {
             const key = (' ' + event.key).slice(1);
-            if(key === "<") setLeftBracket(true);
-            else if(key === ">") setRightBracket(true);
+            if(key === "<") {setRightBracket(false); setLeftBracket(true);}
+            else if(key === ">") {setLeftBracket(false); setRightBracket(true); }
         });
         
+    }
+
+    const handleExpansion = () => {
+        setEditorSquare(prev => {
+            const emptyEditorSquare = {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
+            const expandedEditorArr = prev.map(editorArr => editorArr.push(emptyEditorSquare));
+
+            for(let i=0; i <  expandedEditorArr.length; i++){
+                expandedEditorArr.push(emptyEditorSquare);
+            }
+        })
     }
 
     const processDropZones = (zone) => {
@@ -104,26 +115,24 @@ const ContentContainer = () => {
             windowStyle = sidebarWindow;
 
             // Sets a div the full width of the sidebar for a dropzone area
-            if(tilesToProcess.length === 0){
+            if(tilesToProcess[0].length === 0){
                 const emptySidebarTile = { family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
 
                 processedTiles = 
                 <ListItem>
-                    <DropWrapper onDrop={onDrop} family={zone.type} index={0}>
+                    <DropWrapper onDrop={onDrop} family={zone.type} index={[0, 0]}>
                         <DropSquare tile={emptySidebarTile} style={{...windowStyle, width: "100%"}} family={zone.type} itemIndex={0} />
                     </DropWrapper>
                 </ListItem>
 
-
             }else{
-                processedTiles = tilesToProcess.map((tile, index) => 
-                    <ListItem>
-                        <DropWrapper onDrop={onDrop} family={zone.type} index={index}>
-                            <DropSquare tile={tile} style={tile.src === "" ? sidebarEmptyTile : mapSquareStyles} family={zone.type} itemIndex={index} />
+                processedTiles = tilesToProcess.map((tileRow, rowIndex) => tileRow.map((tile, index) => 
+                    <ListItem key={`${tile.family}-${index}`}>
+                        <DropWrapper onDrop={onDrop} family={zone.type} index={[rowIndex, index]} handleExpansion={handleExpansion}>
+                            <DropSquare tile={tile} style={tile.src === "" ? sidebarEmptyTile : mapSquareStyles} family={zone.type} itemIndex={[rowIndex, index]} />
                         </DropWrapper>
                     </ListItem>
-
-                )
+                ))
             }
 
 
@@ -133,10 +142,10 @@ const ContentContainer = () => {
 
             // Somewhat repetitive code but need to map through nested array here
             processedTiles = tilesToProcess.map((tileRow, rowIndex) => 
-             <TableRow>
+             <TableRow key={`${rowIndex}`}>
                 {tileRow.map((tile, tileIndex) => 
-                <TableCell style={{ padding: 0 }}>
-                    <DropWrapper onDrop={onDrop} family={zone.type} index={[rowIndex, tileIndex]} style={{ width: "100%", height: "100%" }}>
+                <TableCell key={`${tileRow}-${tileIndex}`} style={{ padding: 0 }}>
+                    <DropWrapper onDrop={onDrop} family={zone.type} index={[rowIndex, tileIndex]} editorSquaresArr={tilesToProcess} style={{ width: "100%", height: "100%" }} handleExpansion={handleExpansion}>
                         <DropSquare tile={tile} style={editorSquareStyles} family={zone.type} itemIndex={[rowIndex, tileIndex]} />
                     </DropWrapper>
                 </TableCell>
@@ -154,7 +163,9 @@ const ContentContainer = () => {
              <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZones[0])}</List>
              <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
                         <Table onClick={handleEventAdd} style={{ width: "50%" }}>
+                            <TableBody>
                             {processDropZones(dropZones[1])}
+                            </TableBody>
                         </Table>
                     </TableContainer>
         </Container>
