@@ -105,6 +105,12 @@ const ContentContainer = () => {
         })
     }
 
+    const defineSidebarComponents = (dropFunction, zone, index, tile, styling, editorSquaresArr= ()=>{}, handleExpansion= ()=>{}) => {
+        return <DropWrapper onDrop={dropFunction} family={zone.type} index={index} editorSquaresArr={editorSquaresArr} handleExpansion={handleExpansion}>
+                <DropSquare tile={tile} style={styling} family={zone.type} itemIndex={index} />
+            </DropWrapper>
+    }
+
     const processDropZones = (zone) => {
         let tilesToProcess;
         let processedTiles;
@@ -116,21 +122,17 @@ const ContentContainer = () => {
 
             // Sets a div the full width of the sidebar for a dropzone area
             if(tilesToProcess[0].length === 0){
-                const emptySidebarTile = { family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
+                const tile = { family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
 
-                processedTiles = 
+                processedTiles =
                 <ListItem>
-                    <DropWrapper onDrop={onDrop} family={zone.type} index={[0, 0]}>
-                        <DropSquare tile={emptySidebarTile} style={{...windowStyle, width: "100%"}} family={zone.type} itemIndex={0} />
-                    </DropWrapper>
+                    {defineSidebarComponents(onDrop, zone, 0, tile, {...windowStyle, width: "100%"})}
                 </ListItem>
 
             }else{
                 processedTiles = tilesToProcess.map((tileRow, rowIndex) => tileRow.map((tile, index) => 
                     <ListItem key={`${tile.family}-${index}`}>
-                        <DropWrapper onDrop={onDrop} family={zone.type} index={[rowIndex, index]} handleExpansion={handleExpansion}>
-                            <DropSquare tile={tile} style={tile.src === "" ? sidebarEmptyTile : mapSquareStyles} family={zone.type} itemIndex={[rowIndex, index]} />
-                        </DropWrapper>
+                        {defineSidebarComponents(onDrop, zone, [rowIndex, index], tile, tile.src === "" ? sidebarEmptyTile : mapSquareStyles)}
                     </ListItem>
                 ))
             }
