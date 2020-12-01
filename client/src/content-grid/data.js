@@ -28,7 +28,7 @@ export const dropTiles = [[
     
 ];
 
-export const dropZones = [
+export const dropZoneTypes = [
     { 
         id: 0, 
         type: ITEM_TYPES.SIDE_BAR, 

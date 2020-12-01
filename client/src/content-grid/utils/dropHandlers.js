@@ -41,7 +41,7 @@ const checkTargetInEditor = (sideBarArr, editorArr, index, item) => {
 
         sideBarArr.splice(item.itemIndex, 1);
 
-        sideBarArr.forEach(tile => tile.src !== "" ? mapTiles.push({...tile}) : emptyTiles.push({...tile}))
+        sideBarArr.forEach(tile => tile.src !== "" ? mapTiles.push({...tile}) : emptyTiles.push({...tile}));
 
         mapTiles.push(itemInEditor);
         sideBarArr = [...mapTiles, ...emptyTiles];

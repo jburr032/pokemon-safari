@@ -11,10 +11,6 @@ import ITEM_TYPES from "../itemTypes";
 export const handleMove = (sideBarArr, editorArr, baseItem, family, index) => {
     const item = {...baseItem};
     const emptyDroppableSquare = {family: ITEM_TYPES.EDITOR, type: ITEM_TYPES.MAP,src: "" };
-
-    // let editorArr = [...newItems].filter(item => item.family === ITEM_TYPES.EDITOR);
-    // let sideBarArr = [...newItems].filter(item => item.family === ITEM_TYPES.SIDE_BAR);
-
     
     if(item.family === ITEM_TYPES.SIDE_BAR && family === ITEM_TYPES.EDITOR){
         item.family = family;
