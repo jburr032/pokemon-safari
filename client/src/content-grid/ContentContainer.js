@@ -33,13 +33,13 @@ const ContentContainer = () => {
 
     useEffect(() => {
         if(keyPressed === 'Control' && leftBracketPress ){
-            setSquareHeight(prev => prev !== 118 ? prev - 50 : prev);
-            setSquareWidth(prev => prev !== 118 ? prev - 50 : prev);
+            setSquareHeight(prev => prev !== 168 ? prev - 50 : prev);
+            setSquareWidth(prev => prev !== 168 ? prev - 50 : prev);
             setKeyDownPressed('');
             setLeftBracket(false);
         }else if(keyPressed === 'Control' && rightBracketPress ){
-            setSquareHeight(prev => prev + 50);
-            setSquareWidth(prev => prev + 50);
+            setSquareHeight(prev => prev !== 718 ? prev + 50 : prev);
+            setSquareWidth(prev => prev !== 718 ? prev + 50 : prev);
             setKeyDownPressed('');
             setRightBracket(false);
         }

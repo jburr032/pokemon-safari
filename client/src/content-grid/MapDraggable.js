@@ -20,7 +20,14 @@ const makeGrid = (size, tileColour) => {
 
 const MapDraggable = ({ map, family, itemIndex }) => {
     const [grid, setGrid] = useState([[]]);
-    const [size, setSize] = useState({width: 352, height: 256 });
+    // Highest: width: 794, height: 448 
+    // Ascending order
+    // w: 320, h: 272
+    // width: 272, height: 240
+    // width: 240, height: 208 
+    // width: 192, height: 160
+    // width: 144, height: 128
+    const [size, setSize] = useState({ width: 794, height: 448  });
     const [selectedColour, setColour] = useState("red");
 
     const handleClick = (position) => {
@@ -51,10 +58,15 @@ const MapDraggable = ({ map, family, itemIndex }) => {
                     {(map.src !== "" && map.family === ITEM_TYPES.EDITOR )? <>
                     <div
                       style={{
-                      width: 368,
+                        // w: 368
+                        // w: 319
+                        // w: 283
+                        // w: 233
+                        // w: 179
+                      width: 737,
                       height: 0,
                       zIndex: 5,
-                      marginLeft: "-18px",
+                      marginLeft: "-10px",
                       }}>
                       {grid && grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
                         <MapTile 
