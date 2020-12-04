@@ -1,5 +1,4 @@
 import React, { useReducer } from "react";
-import axios from "axios";
 
 export const mapTypes = {
   SAVE_MAP: "SAVE_MAP",
@@ -28,7 +27,7 @@ const mapReducer = (state, action) => {
     case CHANGE_MAP:
       return {...state, currMap: action.payload }
     default:
-      return initialMapState;
+      return state;
   }
 };
 

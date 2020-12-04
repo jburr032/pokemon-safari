@@ -1,14 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { dropTiles, dropZoneTypes, TEST_DATA } from "./data";
 import ITEM_TYPES from "./itemTypes";
 import { handleMove } from "./utils/handleMove";
 import { Table, TableContainer, List, Container, TableBody, Button, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import processDropZones from "./utils/processDropZones";
+import { EditorContext, editorTypes } from "../state/editorContext";
+
 
 const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
   
 const ContentContainer = () => {
+    // Conext and dispatch
+    const { editorState, editorDispatcher }  = useContext(EditorContext);
+
     // Sidebar and Editor tiles
     const [sidebarTiles, setSidebarTiles] = useState(dropTiles);
     const [editorSquares, setEditorSquare] = useState(TEST_DATA);
@@ -32,17 +37,27 @@ const ContentContainer = () => {
     };
 
     useEffect(() => {
+        let height = editorSquareHeight;
+        let width = editorSquareWidth;
+
         if(keyPressed === 'Control' && leftBracketPress ){
-            setSquareHeight(prev => prev !== 168 ? prev - 50 : prev);
-            setSquareWidth(prev => prev !== 168 ? prev - 50 : prev);
-            setKeyDownPressed('');
+            height = editorSquareHeight !== 168 ? editorSquareHeight - 50 : editorSquareHeight;
+            width = editorSquareWidth !== 168 ? editorSquareWidth - 50 : editorSquareWidth;
+
             setLeftBracket(false);
+
         }else if(keyPressed === 'Control' && rightBracketPress ){
-            setSquareHeight(prev => prev !== 718 ? prev + 50 : prev);
-            setSquareWidth(prev => prev !== 718 ? prev + 50 : prev);
-            setKeyDownPressed('');
+            height = editorSquareHeight !== 718 ? editorSquareHeight + 50 : editorSquareHeight;
+            width = editorSquareWidth !== 718 ? editorSquareWidth + 50 : editorSquareWidth;
+
             setRightBracket(false);
         }
+
+        setKeyDownPressed('');
+        setSquareHeight(height);
+        setSquareWidth(width);
+
+        editorDispatcher({ type: editorTypes.SET_DIMENSIONS, payload: { width, height }})
 
         window.removeEventListener('keyup', ()=>{});
         window.removeEventListener('keyup', ()=>{});

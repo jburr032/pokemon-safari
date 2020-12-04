@@ -2,15 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { EditorProvider } from './state/editorContext';
 
 import { MapProvider } from "./state/mapContext";
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <MapProvider>
-      <App />
-    </MapProvider>
+    <EditorProvider>
+      <MapProvider>
+        <App />
+      </MapProvider>
+    </EditorProvider>
+    
   </React.StrictMode>,
   document.getElementById('root')
 );
