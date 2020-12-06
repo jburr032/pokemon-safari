@@ -10,10 +10,11 @@ const scaleDimensions = [
     { gridWidth: 366, gridSquareWidth: 320, gridSquareHeight: 272 },
     { gridWidth: 430, gridSquareWidth: 360, gridSquareHeight: 308 },
     { gridWidth: 485, gridSquareWidth: 472, gridSquareHeight: 292 },
-    { gridWidth: 573, gridSquareWidth: 644, gridSquareHeight: 260 },
-    { gridWidth: 575, gridSquareWidth: 740, gridSquareHeight: 336 },
-    { gridWidth: 629, gridSquareWidth: 778, gridSquareHeight: 384 },
-    { gridWidth: 737, gridSquareWidth: 794, gridSquareHeight: 448 },
+    { gridWidth: 517, gridSquareWidth: 520, gridSquareHeight: 324 },
+    { gridWidth: 573, gridSquareWidth: 596, gridSquareHeight: 340 },
+    { gridWidth: 629, gridSquareWidth: 612, gridSquareHeight: 405 },
+    { gridWidth: 680, gridSquareWidth: 730, gridSquareHeight: 405 },
+    { gridWidth: 726, gridSquareWidth: 794, gridSquareHeight: 448 },
 ]
 
 const makeGrid = (size, tileColour) => {
@@ -30,23 +31,27 @@ const makeGrid = (size, tileColour) => {
   
     return grid;
   };
-      // randdom - width: 772, height: 260
 
 const MapGrid = () => {
     const { editorState }  = useContext(EditorContext);
 
     const [grid, setGrid] = useState([[]]);
-    const [size, setSize] = useState({  width: 320, height: 272 });
+    const [size, setSquareGrid] = useState({  width: 472, height: 292 });
+    const [editorSquareWith, setEditorSquareWith] = useState(366)
     const [selectedColour, setColour] = useState("red");
 
     useEffect(() => {
         setGrid(makeGrid(size, "blue"))
-      }, []);
+      }, [size]);
 
     useEffect(() => {
         const dimensionIndex = Math.floor(editorState.currDimensions.width/50) - 3;
+        if(scaleDimensions[dimensionIndex]){
+            const { gridWidth, gridSquareWidth, gridSquareHeight } = scaleDimensions[dimensionIndex];
+            setSquareGrid({ width: gridSquareWidth, height: gridSquareHeight });
+            setEditorSquareWith(gridWidth);
+        }
 
-        console.log(scaleDimensions[dimensionIndex]);
 
     }, [editorState.currDimensions])
 
@@ -61,7 +66,7 @@ const MapGrid = () => {
     return (
         <div
           style={{
-            width: 366,
+            width: editorSquareWith,
             height: 0,
             zIndex: 5,
             marginLeft: "-10px",
