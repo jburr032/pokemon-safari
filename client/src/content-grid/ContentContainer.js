@@ -6,6 +6,7 @@ import { Table, TableContainer, List, Container, TableBody, Button, Snackbar } f
 import MuiAlert from '@material-ui/lab/Alert';
 import processDropZones from "./utils/processDropZones";
 import { EditorContext, editorTypes } from "../state/editorContext";
+import ModalUploader from "../misc/ModalUploader";
 
 
 const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -13,6 +14,9 @@ const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
 const ContentContainer = () => {
     // Conext and dispatch
     const { editorState, editorDispatcher }  = useContext(EditorContext);
+
+    // Modal states
+    const [openModalUpload, setModalUploader] = useState(false);
 
     // Sidebar and Editor tiles
     const [sidebarTiles, setSidebarTiles] = useState(dropTiles);
@@ -126,27 +130,39 @@ const ContentContainer = () => {
         }
     };
 
-    const handleClose = () => setExpanded(false);
+    const handleSnackbarClose = () => setExpanded(false);
+
+    const openModalUploader = () => {
+        setModalUploader(true);
+    }
+
+    const closeModalUploader = () => {
+        setModalUploader(false);
+    }
 
     return (
-        <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
-            <Snackbar open={expanded} autoHideDuration={6000} onClose={handleClose}>
-                <Alert severity="info">
-                    Expanded to {editorSquares.length}x{editorSquares[0].length}
-                </Alert>
-            </Snackbar>
-             <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZoneTypes[0], onDrop, sidebarTiles)}</List>
-             <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
-                        <Table onClick={handleEventAdd} style={{ width: "20%" }}>
-                            <TableBody>
-                            {processDropZones(dropZoneTypes[1], onDrop, editorSquares, editorSquareStyles)}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-            <Button onClick={handleExpansion}>Expand</Button>
-            <Button onClick={handleDecrease}>Decrease</Button>
+        <>
+            <Button onClick={openModalUploader}>Upload Map</Button>
+            <ModalUploader open={openModalUpload} closeModal={closeModalUploader}/>
+            <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
+                <Snackbar open={expanded} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                    <Alert severity="info">
+                        Expanded to {editorSquares.length}x{editorSquares[0].length}
+                    </Alert>
+                </Snackbar>
+                <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZoneTypes[0], onDrop, sidebarTiles)}</List>
+                <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
+                            <Table onClick={handleEventAdd} style={{ width: "20%" }}>
+                                <TableBody>
+                                {processDropZones(dropZoneTypes[1], onDrop, editorSquares, editorSquareStyles)}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                <Button onClick={handleExpansion}>Expand</Button>
+                <Button onClick={handleDecrease}>Decrease</Button>
 
-        </Container>
+            </Container>
+        </>
     )
 }
 
