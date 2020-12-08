@@ -33,7 +33,7 @@ export default function MapEditor() {
   const [selectedColour, setColour] = useState("blue");
   const {mapState} = useContext(MapContext);
   const [loadingMap, setLoading] = useState(false);
-  const [fetchedMapfile, setMapFile] = useState('');
+  const [fetchedMapfile, setMapFile] = useState("bills");
 
   const mapImageStyles = {
     backgroundImage: `url(maps/${fetchedMapfile}.png)`,
@@ -49,9 +49,9 @@ export default function MapEditor() {
     setGrid(makeGrid(size, "blue"))
   }, [])
 
-  useEffect(() => {
-    if(mapState.currMap) handleLoadMap();
-  }, [mapState.currMap])
+  // useEffect(() => {
+  //   if(mapState.currMap) handleLoadMap();
+  // }, [mapState.currMap])
 
   const handleClick = (position) => {
     const [y,x] = position.split(",");
@@ -77,21 +77,21 @@ export default function MapEditor() {
 
   }
 
-  const handleHeightChange = (e) => {
-    const gridHeight = e.target.value;
-    if(gridHeight%16 === 0) {
-      setHeight(e.target.value);
-    }
-    else setHeight(0);
-  }
+  // const handleHeightChange = (e) => {
+  //   const gridHeight = e.target.value;
+  //   if(gridHeight%16 === 0) {
+  //     setHeight(e.target.value);
+  //   }
+  //   else setHeight(0);
+  // }
 
-  const handleWidthChange = (e) => {
-    const gridWidth = e.target.value;
-    if(gridWidth%16 === 0) {
-      setWidth(e.target.value);
-    }
-    else setWidth(0);  
-  }
+  // const handleWidthChange = (e) => {
+  //   const gridWidth = e.target.value;
+  //   if(gridWidth%16 === 0) {
+  //     setWidth(e.target.value);
+  //   }
+  //   else setWidth(0);  
+  // }
 
   return (
     <>
@@ -100,7 +100,7 @@ export default function MapEditor() {
                       Loading map...
                     </Alert>
                   </Snackbar>}
-      <MapEditorButtons
+      {/* <MapEditorButtons
         grid={grid}
         setSize={setSize}
         gridHeight={gridHeight}
@@ -109,14 +109,13 @@ export default function MapEditor() {
         handleHeightChange={handleHeightChange}
         setColour={setColour}
         handleLoadMap={handleLoadMap}
-      />
+      /> */}
       <div style={mapImageStyles}>
         <div
           style={{
           width: "512px",
           height: "512px",
           zIndex: 5,
-          marginLeft: "-18px",
           }}>
             {grid && grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
               <MapTile 
