@@ -7,6 +7,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import processDropZones from "./utils/processDropZones";
 import { EditorContext, editorTypes } from "../state/editorContext";
 import ModalUploader from "../misc/ModalUploader";
+import ModalEditor from "../misc/ModalEditor";
 
 
 const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -16,7 +17,7 @@ const ContentContainer = () => {
     const { editorState, editorDispatcher }  = useContext(EditorContext);
 
     // Modal states
-    const [openModalUpload, setModalUploader] = useState(false);
+    const [openUploadModal, setModalUploader] = useState(false);
 
     // Sidebar and Editor tiles
     const [sidebarTiles, setSidebarTiles] = useState(dropTiles);
@@ -132,6 +133,7 @@ const ContentContainer = () => {
 
     const handleSnackbarClose = () => setExpanded(false);
 
+// Modal handlers
     const openModalUploader = () => {
         setModalUploader(true);
     }
@@ -143,7 +145,10 @@ const ContentContainer = () => {
     return (
         <>
             <Button onClick={openModalUploader}>Upload Map</Button>
-            <ModalUploader open={openModalUpload} closeModal={closeModalUploader}/>
+
+            <ModalUploader open={openUploadModal} closeModal={closeModalUploader}/>
+            <ModalEditor open={editorState.editorModal} />
+
             <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
                 <Snackbar open={expanded} autoHideDuration={6000} onClose={handleSnackbarClose}>
                     <Alert severity="info">

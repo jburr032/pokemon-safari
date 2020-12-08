@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useDrag } from "react-dnd";
 import ITEM_TYPES from "./itemTypes";
 import { Button, makeStyles } from "@material-ui/core";
+import { EditorContext, editorTypes } from "../state/editorContext";
 
 const useStyles = makeStyles({
   editButtonStyles: { 
@@ -21,6 +22,13 @@ const useStyles = makeStyles({
 const MapDraggable = ({ map, family, itemIndex }) => {
     const [showBtns, setBtns] = useState(false);
     const classes = useStyles();
+    const { editorDispatcher } = useContext(EditorContext);
+
+
+    const handleEditorModal = () => {
+      editorDispatcher({ type: editorTypes.CLOSE_EDITOR_MODAL, payload: true })
+    };
+
     const [{ isDragging }, drag] = useDrag({
         item: {
           type: `${ITEM_TYPES.MAP}`,
@@ -54,7 +62,7 @@ const MapDraggable = ({ map, family, itemIndex }) => {
                             height="100%"
                           />
                           {showBtns && <div style={{ top: "75%", position: "relative" }}>
-                            <Button className={classes.editButtonStyles} onMouseEnter={handleMouseEnter} variant="contained" color="primary">EDIT</Button>
+                            <Button className={classes.editButtonStyles} onClick={handleEditorModal} onMouseEnter={handleMouseEnter} variant="contained" color="primary">EDIT</Button>
                             <Button className={classes.resetButtonStyles} onMouseEnter={handleMouseEnter} variant="contained" color="secondary">RESET</Button>
                           </div>}
                       </div> : 
