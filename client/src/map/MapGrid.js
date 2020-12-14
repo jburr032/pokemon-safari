@@ -2,6 +2,20 @@ import React, { useState, useEffect, useContext } from 'react'
 import MapTile from "./MapTile";
 import { EditorContext } from "../state/editorContext";
 
+const gridContainerStyles = {
+  width: "511px",
+  height: "512px",
+  zIndex: 5,
+  marginLeft: "7%",
+  marginTop: "80px"
+};
+
+const mapTilesContainerStyles = { 
+  position: "absolute", 
+  width: "516px", 
+  height: "516px" 
+};
+
 const makeGrid = (size, tileColour) => {
     let grid = [];
   
@@ -39,14 +53,8 @@ const MapGrid = () => {
 
     return (
         <div
-          style={{
-            width: "511px",
-            height: "512px",
-            zIndex: 5,
-            marginLeft: "33%",
-            marginTop: "30px"
-        }}>
-          <div style={{ position: "absolute", width: "516px", height: "516px" }}>
+          style={gridContainerStyles}>
+          <div style={mapTilesContainerStyles}>
             {grid && grid.map((row, rowIndex) => row.map((tile, tileIndex) => 
               <MapTile 
                 key={`${rowIndex}-${tileIndex}`} 
