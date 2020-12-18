@@ -70,6 +70,10 @@ const ModalEditor = ({ open }) => {
           </div>
         </Grid>
         <Grid item md={8}>
+          <img style={{ height: "72px", width: "72px" }} src={pokemonObjs[86].down.frame1} />
+          <img style={{ height: "72px", width: "72px" }} src={pokemonObjs[86].right.frame1} />
+          <img style={{ height: "72px", width: "72px" }} src={pokemonObjs[86].right.frame2} />
+
           <MapGrid />
         </Grid>
       </Grid>

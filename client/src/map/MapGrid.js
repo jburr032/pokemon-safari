@@ -12,16 +12,16 @@ const gridContainerStyles = {
 
 const mapTilesContainerStyles = { 
   position: "absolute", 
-  width: "516px", 
+  width: "520px", 
   height: "516px" 
 };
 
 const makeGrid = (size, tileColour) => {
     let grid = [];
   
-    for (let i = 0; i < size.height/16; i++) {
+    for (let i = 0; i < size.height/72; i++) {
       let row = [];
-      for (let j = 0; j < size.width/16; j++) {
+      for (let j = 0; j < size.width/72; j++) {
         row.push(tileColour);
       }
   
@@ -35,7 +35,7 @@ const MapGrid = () => {
     const { editorState }  = useContext(EditorContext);
 
     const [grid, setGrid] = useState([[]]);
-    const [size, setSquareGrid] = useState({ width: 672, height: 284 });
+    const [size, setSquareGrid] = useState({ width: 504, height: 504 });
     const [editorSquareWith, setEditorSquareWith] = useState(366)
     const [selectedColour, setColour] = useState("red");
 
@@ -63,7 +63,7 @@ const MapGrid = () => {
                 onClick={handleClick}/>))
             }
           </div>
-          <img src="/maps/bills.png" alt="map" width="100%" height="100%" style={{ paddingLeft: "12px" }} />
+          <img src="/maps/bills.png" alt="map" width="100%" height="100%" style={{ paddingLeft: "20px", paddingTop: "23px" }} />
         </div>
     )
 }
