@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useDrag } from "react-dnd";
-import ITEM_TYPES from "./itemTypes";
+import ITEM_TYPES from "../misc/itemTypes";
 import { Button, makeStyles } from "@material-ui/core";
 import { EditorContext, editorTypes } from "../state/editorContext";
 

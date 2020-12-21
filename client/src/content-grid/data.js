@@ -1,4 +1,4 @@
-import ITEM_TYPES from "./itemTypes";
+import ITEM_TYPES from "../misc/itemTypes";
 
 export const dropTiles = [[
         {family: ITEM_TYPES.SIDE_BAR, type: ITEM_TYPES.MAP, src: "/maps/safari_zone.png", name: "Safari Zone"},

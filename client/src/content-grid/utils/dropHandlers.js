@@ -72,11 +72,8 @@ const moveEditorToSidebar = (item, sideBarArr, editorArr, index, family, emptySi
     const mapTiles = [];
 
     item.family = family;
-    console.log('index', index)
-    console.log('item', item)
 
     sideBarArr.splice(index, 0, item);
-    console.log('sideBarArr', sideBarArr)
 
     sideBarArr.forEach(tile => tile.src !== "" ? mapTiles.push({...tile}) : emptyTiles.push({...tile}))
 

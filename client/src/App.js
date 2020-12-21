@@ -99,7 +99,6 @@ const move = (item, to, setGrid) => {
 
   updatedImgData[to[0]][to[1]] = imgData[currPos[0]][currPos[1]];
   updatedImgData[currPos[0]][currPos[1]] = imgData[to[0]][to[1]]
-  console.log(updatedImgData);
  
   const newGrid = createGrid(updatedImgData, setGrid);
   setGrid(newGrid);

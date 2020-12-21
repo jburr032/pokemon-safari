@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { dropTiles, dropZoneTypes, TEST_DATA } from "./data";
-import ITEM_TYPES from "./itemTypes";
+import ITEM_TYPES from "../misc/itemTypes";
 import { handleMove } from "./utils/handleMove";
 import { Table, TableContainer, List, Container, TableBody, Button, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -146,10 +146,10 @@ const ContentContainer = () => {
         <>
             <Button onClick={openModalUploader}>Upload Map</Button>
 
-            <ModalUploader open={openUploadModal} closeModal={closeModalUploader}/>
-            <ModalEditor open={editorState.editorModal} />
+            {/* <ModalUploader open={openUploadModal} closeModal={closeModalUploader}/> */}
+            <ModalEditor open={true} />
 
-            <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
+            {/* <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
                 <Snackbar open={expanded} autoHideDuration={6000} onClose={handleSnackbarClose}>
                     <Alert severity="info">
                         Expanded to {editorSquares.length}x{editorSquares[0].length}
@@ -166,7 +166,7 @@ const ContentContainer = () => {
                 <Button onClick={handleExpansion}>Expand</Button>
                 <Button onClick={handleDecrease}>Decrease</Button>
 
-            </Container>
+            </Container> */}
         </>
     )
 }
