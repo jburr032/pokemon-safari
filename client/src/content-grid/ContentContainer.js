@@ -1,14 +1,24 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { dropTiles, dropZoneTypes, TEST_DATA } from "./data";
-import ITEM_TYPES from "./itemTypes";
+import ITEM_TYPES from "../misc/itemTypes";
 import { handleMove } from "./utils/handleMove";
 import { Table, TableContainer, List, Container, TableBody, Button, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import processDropZones from "./utils/processDropZones";
+import { EditorContext, editorTypes } from "../state/editorContext";
+import ModalUploader from "../misc/ModalUploader";
+import ModalEditor from "../misc/ModalEditor";
+
 
 const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
   
 const ContentContainer = () => {
+    // Conext and dispatch
+    const { editorState, editorDispatcher }  = useContext(EditorContext);
+
+    // Modal states
+    const [openUploadModal, setModalUploader] = useState(false);
+
     // Sidebar and Editor tiles
     const [sidebarTiles, setSidebarTiles] = useState(dropTiles);
     const [editorSquares, setEditorSquare] = useState(TEST_DATA);
@@ -32,17 +42,27 @@ const ContentContainer = () => {
     };
 
     useEffect(() => {
+        let height = editorSquareHeight;
+        let width = editorSquareWidth;
+
         if(keyPressed === 'Control' && leftBracketPress ){
-            setSquareHeight(prev => prev !== 168 ? prev - 50 : prev);
-            setSquareWidth(prev => prev !== 168 ? prev - 50 : prev);
-            setKeyDownPressed('');
+            height = editorSquareHeight !== 168 ? editorSquareHeight - 50 : editorSquareHeight;
+            width = editorSquareWidth !== 168 ? editorSquareWidth - 50 : editorSquareWidth;
+
             setLeftBracket(false);
+
         }else if(keyPressed === 'Control' && rightBracketPress ){
-            setSquareHeight(prev => prev !== 718 ? prev + 50 : prev);
-            setSquareWidth(prev => prev !== 718 ? prev + 50 : prev);
-            setKeyDownPressed('');
+            height = editorSquareHeight !== 718 ? editorSquareHeight + 50 : editorSquareHeight;
+            width = editorSquareWidth !== 718 ? editorSquareWidth + 50 : editorSquareWidth;
+
             setRightBracket(false);
         }
+
+        setKeyDownPressed('');
+        setSquareHeight(height);
+        setSquareWidth(width);
+
+        editorDispatcher({ type: editorTypes.SET_DIMENSIONS, payload: { width, height }})
 
         window.removeEventListener('keyup', ()=>{});
         window.removeEventListener('keyup', ()=>{});
@@ -111,27 +131,43 @@ const ContentContainer = () => {
         }
     };
 
-    const handleClose = () => setExpanded(false);
+    const handleSnackbarClose = () => setExpanded(false);
+
+// Modal handlers
+    const openModalUploader = () => {
+        setModalUploader(true);
+    }
+
+    const closeModalUploader = () => {
+        setModalUploader(false);
+    }
 
     return (
-        <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
-            <Snackbar open={expanded} autoHideDuration={6000} onClose={handleClose}>
-                <Alert severity="info">
-                    Expanded to {editorSquares.length}x{editorSquares[0].length}
-                </Alert>
-            </Snackbar>
-             <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZoneTypes[0], onDrop, sidebarTiles)}</List>
-             <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
-                        <Table onClick={handleEventAdd} style={{ width: "20%" }}>
-                            <TableBody>
-                            {processDropZones(dropZoneTypes[1], onDrop, editorSquares, editorSquareStyles)}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-            <Button onClick={handleExpansion}>Expand</Button>
-            <Button onClick={handleDecrease}>Decrease</Button>
+        <>
+            <Button onClick={openModalUploader}>Upload Map</Button>
 
-        </Container>
+            {/* <ModalUploader open={openUploadModal} closeModal={closeModalUploader}/> */}
+            <ModalEditor open={true} />
+
+            {/* <Container style={{ marginLeft: '38px', marginTop: '125px', marginBottom: '125px' }}>
+                <Snackbar open={expanded} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                    <Alert severity="info">
+                        Expanded to {editorSquares.length}x{editorSquares[0].length}
+                    </Alert>
+                </Snackbar>
+                <List style={{ marginLeft: '-23px', position: 'absolute' }}>{processDropZones(dropZoneTypes[0], onDrop, sidebarTiles)}</List>
+                <TableContainer style={{ width: "1176px", height: "725px", overflowX: 'auto', marginLeft: '244px'}}>
+                            <Table onClick={handleEventAdd} style={{ width: "20%" }}>
+                                <TableBody>
+                                {processDropZones(dropZoneTypes[1], onDrop, editorSquares, editorSquareStyles)}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                <Button onClick={handleExpansion}>Expand</Button>
+                <Button onClick={handleDecrease}>Decrease</Button>
+
+            </Container> */}
+        </>
     )
 }
 

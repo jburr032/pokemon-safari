@@ -1,6 +1,6 @@
 import { TableRow, TableCell, ListItem } from '@material-ui/core';
-import ITEM_TYPES from "../itemTypes";
-import {editorWindow, sidebarWindow, mapSquareStyles, sidebarEmptyTile} from "./dropZoneStyles";
+import ITEM_TYPES from "../../misc/itemTypes";
+import { editorWindow, sidebarWindow, mapSquareStyles, sidebarEmptyTile } from "./dropZoneStyles";
 import DropWrapper from "../DropWrapper";
 import DropSquare from "../DropSquare";
 

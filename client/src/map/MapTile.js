@@ -2,9 +2,9 @@ import React from "react";
 
 export default function MapTile({ tileColour, position, onClick }){
     const styles = {
-      width: "16px",
+      width: "39px",
       transform: "translateY(25%) translateX(15px)",
-      height: "16px",
+      height: "39px",
       display: "inline-flex",
       zIndex: 2,
       color: "transparent",
@@ -14,7 +14,10 @@ export default function MapTile({ tileColour, position, onClick }){
       border: "1px solid white",
       cursor: "pointer"
     }
-    return <div id={position} style={styles} onClick={(e) => onClick(e.target.id)}>0</div>
+  
+  return <div id={position} style={styles} onClick={(e) => onClick(e.target.id)} />
+
+
 }
 
 

@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import Grid from "@material-ui/core/Grid";
-import {Typography} from "@material-ui/core";
+import {Typography, Button} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -8,33 +8,28 @@ import CardMedia from "@material-ui/core/CardMedia";
 
 import {MapContext, mapTypes} from "../state/mapContext";
 
-export default function MapCard({name}){
+export default function MapCard({ src, name }){
     const {dispatch} = useContext(MapContext);
-    const processedName = name.replace("_", " ");
 
-    const handleClick = () => {
-      dispatch({ type: mapTypes.CHANGE_MAP, payload: name})
-    }
+    // const handleClick = () => {
+    //   dispatch({ type: mapTypes.CHANGE_MAP, payload: name})
+    // }
 
     return (
-        <Grid item md={6}>
-        <Card>
-          <CardActionArea style={{ backgroundColor: "#e6f5f3" }}>
+        <Card style={{ height: "100%", position: "relative" }}>            
             <CardMedia
               component="img"
-              alt={processedName}
-              height="140"
-              src={`./sprites/${name}.png`}
-              title={processedName}
-              onClick={handleClick}
+              alt={name}
+              height="100%"
+              src={src}
+              title={name}
+              style={{ position: "relative", height: "90%" }}
             />
+            <div style={{ zIndex: 30000, position: "absolute" }}>
             <CardContent>
-              <Typography gutterBottom variant="subtitle2" component="h6" >
-                {processedName}
-              </Typography>
+            <Button>Click</Button>
             </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
+            </div>
+     </Card>
     )
 }

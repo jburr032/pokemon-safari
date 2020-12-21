@@ -3,7 +3,7 @@
  * See attempted refactor in dropHandlers.js
  * 
  */
-import ITEM_TYPES from "../itemTypes";
+import ITEM_TYPES from "../../misc/itemTypes";
 
 // @PARAMETER baseItem is the item being moved
 // @PARAMETER index is the target's zone - will need to be an array even if only one element
