@@ -14,6 +14,8 @@ const DIRECTIONS = {
     RIGHT: "right"
 };
 
+const MONSTER_STEP = 20;
+
 const MonsterPlayer = ({ pokemonObj }) => {
     const [walkingImg, setWalkingImg] = useState([DIRECTIONS.DOWN, FRAMES.FRAME_1]);
     const [monsterMovement, setMonsterMovement] = useState({
@@ -25,34 +27,50 @@ const MonsterPlayer = ({ pokemonObj }) => {
     // Places monster on dropped area
     useEffect(() => {
         setMonsterMovement(() => ({
-            top: 0 + (pokemonObj.index[0] * 38),
-            left: 0 + (pokemonObj.index[1] * 43.7),
+            top: 0 + (pokemonObj.index[0] * 41),
+            left: 0 + (pokemonObj.index[1] * 41),
             direction: DIRECTIONS.DOWN
         }))
 
     }, [pokemonObj.index]);
 
-
     const handleMovement = (e) => {
         switch(e.key){
             case("ArrowDown"):
-                setMonsterMovement(prev => ({ ...prev, top: prev.top + 19, direction: DIRECTIONS.DOWN }));
+                setMonsterMovement(prev => {
+                    
+                    if(Math.round((prev.top/41 + 2)) >= 5){
+                        console.log('BLOCKED')
+                        return prev;
+                    } 
+                    else return { ...prev, top: prev.top + MONSTER_STEP, direction: DIRECTIONS.DOWN }
+                });
+
                 setWalkingImg(prev => prev[1] === FRAMES.FRAME_1 ? [DIRECTIONS.DOWN, FRAMES.FRAME_2] : [DIRECTIONS.DOWN, FRAMES.FRAME_1]);
+
+
                 break;
         
             case("ArrowUp"):
-                setMonsterMovement(prev => ({ ...prev, top: prev.top - 19, direction: DIRECTIONS.UP }));
+                setMonsterMovement(prev => ({ ...prev, top: prev.top - MONSTER_STEP, direction: DIRECTIONS.UP }));
                 setWalkingImg(prev => prev[1] === FRAMES.FRAME_1 ? [DIRECTIONS.UP, FRAMES.FRAME_2] : [DIRECTIONS.UP, FRAMES.FRAME_1]);
+                const x = monsterMovement.top
+
+
                 break;
         
             case("ArrowLeft"):
-                setMonsterMovement(prev => ({ ...prev, left: prev.left - 19, direction: DIRECTIONS.LEFT }));
+                setMonsterMovement(prev => ({ ...prev, left: prev.left - MONSTER_STEP, direction: DIRECTIONS.LEFT }));
                 setWalkingImg(prev => prev[1] === FRAMES.FRAME_1 ? [DIRECTIONS.LEFT, FRAMES.FRAME_2] : [DIRECTIONS.LEFT, FRAMES.FRAME_1]);
+
+
                 break;
         
             case("ArrowRight"):
-                setMonsterMovement(prev => ({ ...prev, left: prev.left + 19, direction: DIRECTIONS.RIGHT }));
+                setMonsterMovement(prev => ({ ...prev, left: prev.left + MONSTER_STEP, direction: DIRECTIONS.RIGHT }));
                 setWalkingImg(prev => prev[1] === FRAMES.FRAME_1 ? [DIRECTIONS.RIGHT, FRAMES.FRAME_2] : [DIRECTIONS.RIGHT, FRAMES.FRAME_1]);
+
+
                 break;
         }
 
@@ -71,20 +89,27 @@ const MonsterPlayer = ({ pokemonObj }) => {
             index: pokemonObj.index
         },
     });
-    
+
+    // console.log('Down direction', Math.round((monsterMovement.top/41 + 2)))
+
+    // console.log('Up direction', Math.round((monsterMovement.top/41)))
+
+    // console.log('Left direction', Math.round((monsterMovement.left/41)))
+
+    // console.log('Right direction', Math.round((monsterMovement.left/41) + 2))
+
     return (
         // Only renders an img if the object has properties
         Object.keys(pokemonObj.monster).length > 0 && 
             <img alt={pokemonObj.name} ref={drag}
                 style={{ 
-                    marginLeft: "-23px",
-                    marginTop: "-35px",
-                    height: "136px", 
-                    width: "136px", 
+                    height: "130px", 
+                    width: "130px", 
                     zIndex: 2000, 
                     position: "absolute", 
                     top: monsterMovement.top, 
-                    left: monsterMovement.left }} 
+                    left: monsterMovement.left,
+                 }} 
                 src={pokemonObj.monster[walkingImg[0]][walkingImg[1]]} />
     )
 }

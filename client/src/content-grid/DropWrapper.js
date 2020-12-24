@@ -14,7 +14,6 @@ const DropWrapper = ({ onDrop, family = "", children, index = 0, styles={} }) =>
         })
     });
 
-
     return (
         <div ref={drop} style={styles}>
             {React.cloneElement(children, { isOver })}
