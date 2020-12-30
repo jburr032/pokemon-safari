@@ -3,6 +3,7 @@ import MapTile from "./MapTile";
 import { EditorContext } from "../state/editorContext";
 import DropWrapper from "../content-grid/DropWrapper";
 import MonsterPlayer from "../monsters/MonsterPlayer";
+import { MapContext } from "../state/mapContext";
 
 const gridContainerStyles = {
   width: "488px",
@@ -35,7 +36,8 @@ const makeGrid = (size, tileColour) => {
   };
 
 const MapGrid = ({ monsterToRemoveId, setMonsterToRemove }) => {
-    const { editorState }  = useContext(EditorContext);
+    const { editorState, editorDispatcher }  = useContext(EditorContext);
+    const { mapState, dispatch } = useContext(MapContext);
 
     const [grid, setGrid] = useState([[]]);
     const [size, setSquareGrid] = useState({ width: 439, height: 440 });
@@ -46,6 +48,8 @@ const MapGrid = ({ monsterToRemoveId, setMonsterToRemove }) => {
     useEffect(() => {
       const grid = makeGrid(size, "blue");
       setGrid(grid);
+      dispatch({ type: "CHANGE_MAP", payload: grid });
+
 
     // eslint-disable-next-line 
     }, [])
@@ -81,7 +85,9 @@ const MapGrid = ({ monsterToRemoveId, setMonsterToRemove }) => {
         const tempGrid = grid.map(row => [...row]);
         tempGrid[y][x] = selectedColour;
     
-        setGrid(tempGrid)
+        console.log('COLOURED', position)
+        setGrid(tempGrid);
+        dispatch({ type: "CHANGE_MAP", payload: tempGrid });
       }
 
     return (

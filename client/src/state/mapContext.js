@@ -10,7 +10,7 @@ export const mapTypes = {
 };
 
 const initialMapState = {
-  currMap: "",
+  currMap: [],
   currColour: "blue",
   savedMap: [],
   saveError: false,
